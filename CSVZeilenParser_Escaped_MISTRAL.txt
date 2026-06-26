@@ -1,0 +1,54 @@
+// Parsen einer CSV-Zeile in Spalten
+int CSVParser::parseLine(&String_16 line, *String_16 columns[]) {
+   var int colIndex = 0;
+   var int i = 0;
+   var int len = line.length();
+   var int inQuotes = 0;  // 1 = innerhalb von Anführungszeichen
+   var String_16 currentField;
+
+   while (i < len) {
+      var char c = line.getAt(i);
+
+      // Escape-Zeichen für Anführungszeichen
+      if (c == _quoteChar) {
+         if (inQuotes == 1) {
+            // Nächstes Zeichen prüfen: Escape-Sequenz (z. B. "")
+            if (i + 1 < len && line.getAt(i + 1) == _quoteChar) {
+               currentField.append(_quoteChar); // Einfaches Anführungszeichen hinzufügen
+               i = i + 2; // Überspringe beide Anführungszeichen
+               continue;
+            } else {
+               // Ende des Feldes in Anführungszeichen
+               inQuotes = 0;
+               i = i + 1;
+               continue;
+            }
+         } else {
+            // Anfang eines Feldes in Anführungszeichen
+            inQuotes = 1;
+            i = i + 1;
+            continue;
+         }
+      }
+
+      // Trennzeichen außerhalb von Anführungszeichen
+      if (c == _delimiter && inQuotes == 0) {
+         // Feld speichern
+         columns[colIndex].assign(currentField);
+         colIndex = colIndex + 1;
+         currentField.clear();
+         i = i + 1;
+         continue;
+      }
+
+      // Normales Zeichen hinzufügen
+      currentField.append(c);
+      i = i + 1;
+   }
+
+   // Letztes Feld speichern
+   columns[colIndex].assign(currentField);
+   colIndex = colIndex + 1;
+
+   return colIndex;
+}
