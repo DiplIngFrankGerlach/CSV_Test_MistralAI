@@ -1,0 +1,24 @@
+// AppMain.ad
+
+class ExpressionEvaluator
+{
+    String_16 _expression;
+    int _pos;
+    Math _math;
+
+methods:
+    ExpressionEvaluator();
+    void setExpression(&String_16 expr);
+    double evaluate();
+    double parseExpression();
+    double parseTerm();
+    double parseFactor();
+    double parseFunction();
+    double parseNumber();
+    void skipWhitespace();
+    char peekChar();
+    char nextChar();
+    int isDigit(char c);
+    int isAlpha(char c);
+};
+
