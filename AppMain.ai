@@ -1,0 +1,26 @@
+Import
+{
+  "Strings.ad",
+  "System.ad",
+  "CSVLeser_MISTRAL.ad",
+  "AppMain.ad"
+}
+
+int Main::main()
+{
+   var PrintfClass pfc;
+   var String_16 filename("daten.csv"); // Pfad zur CSV-Datei
+   var String_16 delimiter(",");         // Trennzeichen (Komma)
+
+   // Erstelle CSVLeser-Objekt
+   var CSVLeser csvReader(filename, delimiter);
+
+   // Berechne den Durchschnitt der 2. Spalte (Index 1)
+   var double average = csvReader.calculateColumnAverage(2);
+
+   // Gib das Ergebnis aus
+   pfc.fstr("Durchschnittswert der 2. Spalte: $").sa(average).pr();
+
+   return 1;
+}
+

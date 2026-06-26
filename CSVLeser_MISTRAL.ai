@@ -1,0 +1,68 @@
+Import {
+   "Strings.ad",
+   "System.ad",
+   "CSVLeser_MISTRAL.ad"
+}
+
+// Konstruktor: Öffnet die CSV-Datei
+CSVLeser::CSVLeser(&String_16 filename, &String_16 delimiter) {
+   _file = new SPRFile(filename, 0); // 0 = Readonly
+   _delimiter.assign(delimiter);
+   _numColumns = 0;
+}
+
+// Destruktor: Schließt die Datei
+CSVLeser::~CSVLeser() {
+   if (_file != NULL) {
+      _file.close();
+      _file = NULL;
+   }
+}
+
+// Liest die nächste Zeile der CSV-Datei
+int CSVLeser::readNextLine(&String_16 line) {
+   line.clear();
+   return _file.readLine(line);
+}
+
+// Teilt eine Zeile in Spalten auf
+int CSVLeser::splitLine(&String_16 line, *String_16 columns[]) {
+   var char delimiterChar = _delimiter.getAt(0);
+   return line.teileAuf(columns, delimiterChar);
+}
+
+// Berechnet den Durchschnittswert einer bestimmten Spalte
+double CSVLeser::calculateColumnAverage(int columnIndex) {
+   var String_16 line;
+   var *String_16 columns[] = new String_16[5]; // 5 Spalten
+   var double sum = 0.0;
+   var int count = 0;
+
+
+   // Lies alle Zeilen
+   while (this.readNextLine(line) == 1) {
+      var PrintfClass pfc;
+      pfc.fstr("$").sa(line).pr();
+      //if (line.length() == 0) continue; // Leere Zeilen überspringen
+
+      // Teile die Zeile in Spalten auf
+      var int numColumns = this.splitLine(line, columns);
+      //if (numColumns <= columnIndex) continue; // Spalte existiert nicht
+
+      // Konvertiere den Wert in der Spalte zu double
+      var String_16 value(columns[columnIndex]);
+      var double numericValue = value.asDouble();
+
+      // Addiere zum Summe
+      sum = sum + numericValue;
+      count = count + 1;
+   }
+
+   // Berechne den Durchschnitt
+   if (count > 0) {
+      return sum / count;
+   } else {
+      return 0.0; // Keine gültigen Werte gefunden
+   }
+   return 0.0;//Schnuller fuer Compiler
+}

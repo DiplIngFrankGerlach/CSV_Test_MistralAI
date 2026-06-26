@@ -1,0 +1,26 @@
+
+// Klasse zum Lesen von CSV-Dateien
+class CSVLeser {
+   SPRFile* _file;          // Datei-Handle
+   String_16 _delimiter;    // Trennzeichen (Standard: Komma)
+   int _numColumns;         // Anzahl der Spalten
+
+methods:
+   // Konstruktor: Öffnet eine CSV-Datei
+   CSVLeser(&String_16 filename, &String_16 delimiter);
+
+   // Destruktor: Schließt die Datei
+   ~CSVLeser();
+
+   // Liest die nächste Zeile der CSV-Datei
+   // Gibt 1 zurück, wenn erfolgreich, sonst 0 (EOF)
+   int readNextLine(&String_16 line);
+
+   // Teilt eine Zeile in Spalten auf
+   // Gibt die Anzahl der Spalten zurück
+   int splitLine(&String_16 line, *String_16 columns[]);
+
+   // Berechnet den Durchschnittswert einer bestimmten Spalte (0-basiert)
+   // Gibt den Durchschnitt als double zurück
+   double calculateColumnAverage(int columnIndex);
+};
