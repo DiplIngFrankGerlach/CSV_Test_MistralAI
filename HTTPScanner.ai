@@ -1,0 +1,477 @@
+Import
+{
+  "Strings.ad",
+  "System.ad",
+  "TokenType.ad",
+  "HTTPScanner.ad"
+}
+
+
+HTTPScanner::HTTPScanner(SPRFile* f)
+{
+    _file = f;
+
+    _currentToken = new String_16;
+
+    _validBytes = 0;
+    _currentPtr = 0;
+    _filePos = 0;
+
+    _eof = 0;
+
+    _line = 1;
+    _column = 0;
+
+    this.nextChar();
+}
+
+
+int HTTPScanner::isLetter(char c)
+{
+    switch(c)
+    {
+        case 'a': case 'b': case 'c': case 'd': case 'e':
+        case 'f': case 'g': case 'h': case 'i': case 'j':
+        case 'k': case 'l': case 'm': case 'n': case 'o':
+        case 'p': case 'q': case 'r': case 's': case 't':
+        case 'u': case 'v': case 'w': case 'x': case 'y':
+        case 'z':
+
+        case 'A': case 'B': case 'C': case 'D': case 'E':
+        case 'F': case 'G': case 'H': case 'I': case 'J':
+        case 'K': case 'L': case 'M': case 'N': case 'O':
+        case 'P': case 'Q': case 'R': case 'S': case 'T':
+        case 'U': case 'V': case 'W': case 'X': case 'Y':
+        case 'Z':
+        {
+            return 1;
+        };
+
+        default:
+        {
+            return 0;
+        };
+    }
+
+    return 0;
+}
+
+int HTTPScanner::isDigit(char c)
+{
+    switch(c)
+    {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        {
+            return 1;
+        };
+
+        default:
+        {
+            return 0;
+        };
+    }
+
+    return 0;
+}
+
+void HTTPScanner::skipWhitespace()
+{
+    var int fertig = 0;
+
+    while(fertig == 0)
+    {
+        switch(_currentChar)
+        {
+            case ' ':
+            {
+                this.nextChar();
+            };
+            break;
+
+            case '\t':
+            {
+                this.nextChar();
+            };
+            break;
+
+            case '\r':
+            {
+                this.nextChar();
+            };
+            break;
+
+            case '\n':
+            {
+                this.nextChar();
+            };
+            break;
+
+            default:
+            {
+                fertig = 1;
+            };
+        }
+    }
+}
+
+
+
+void HTTPScanner::skipWhitespace()
+{
+    var int fertig = 0;
+
+    while(fertig == 0)
+    {
+        switch(_currentChar)
+        {
+            case ' ':
+            {
+                this.nextChar();
+            };
+            break;
+
+            case '\t':
+            {
+                this.nextChar();
+            };
+            break;
+
+            case '\r':
+            {
+                this.nextChar();
+            };
+            break;
+
+            case '\n':
+            {
+                this.nextChar();
+            };
+            break;
+
+            default:
+            {
+                fertig = 1;
+            };
+        }
+    }
+}
+
+
+TokenType HTTPScanner::scanOperator()
+{
+    _currentToken.assign("");
+
+    switch(_currentChar)
+    {
+        case '+':
+        {
+            _currentToken.append('+');
+            this.nextChar();
+            return TT_PLUS;
+        };
+
+        case '-':
+        {
+            _currentToken.append('-');
+            this.nextChar();
+            return TT_MINUS;
+        };
+
+        case '*':
+        {
+            _currentToken.append('*');
+            this.nextChar();
+            return TT_STAR;
+        };
+
+        case '/':
+        {
+            _currentToken.append('/');
+            this.nextChar();
+            return TT_SLASH;
+        };
+    }
+
+    return TT_ERROR;
+}
+
+TokenType HTTPScanner::scanSeparator()
+{
+    _currentToken.assign("");
+
+    switch(_currentChar)
+    {
+        case '(':
+        {
+            _currentToken.append('(');
+            this.nextChar();
+            return TT_LPAREN;
+        };
+
+        case ')':
+        {
+            _currentToken.append(')');
+            this.nextChar();
+            return TT_RPAREN;
+        };
+
+        case ',':
+        {
+            _currentToken.append(',');
+            this.nextChar();
+            return TT_COMMA;
+        };
+
+        case '.':
+        {
+            _currentToken.append('.');
+            this.nextChar();
+            return TT_DOT;
+        };
+    }
+
+    return TT_ERROR;
+}
+
+
+TokenType HTTPScanner::scanInteger()
+{
+    while(1)
+    {
+        switch(_currentChar)
+        {
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+            {
+                _currentToken.append(_currentChar);
+                this.nextChar();
+            };
+            break;
+
+            case '.':
+            {
+                _currentToken.append('.');
+                this.nextChar();
+
+                return this.scanFraction();
+            };
+
+            default:
+            {
+                return TT_INTEGER;
+            };
+        }
+    }
+
+    return TT_ERROR;
+}
+
+TokenType HTTPScanner::scanFraction()
+{
+    while(1)
+    {
+        switch(_currentChar)
+        {
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+            {
+                _currentToken.append(_currentChar);
+                this.nextChar();
+            };
+            break;
+
+            case 'E':
+            {
+                _currentToken.append('E');
+                this.nextChar();
+
+                return this.scanExponent();
+            };
+
+            default:
+            {
+                return TT_FLOAT;
+            };
+        }
+    }
+
+    return TT_ERROR;
+}
+
+TokenType HTTPScanner::scanExponent()
+{
+    switch(_currentChar)
+    {
+        case '-':
+        {
+            _currentToken.append('-');
+            this.nextChar();
+        };
+    }
+
+    while(1)
+    {
+        switch(_currentChar)
+        {
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+            {
+                _currentToken.append(_currentChar);
+                this.nextChar();
+            };
+            break;
+
+            default:
+            {
+                return TT_FLOAT;
+            };
+        }
+    }
+
+    return TT_ERROR;
+}
+
+TokenType HTTPScanner::nextToken()
+{
+    _currentToken.assign("");
+
+    this.skipWhitespace();
+
+    if(_eof == 1)
+    {
+        _currentTokenType = TT_EOF;
+        return TT_EOF;
+    }
+
+    switch(_currentChar)
+    {
+        //
+        // Identifier
+        //
+
+        case 'a': case 'b': case 'c': case 'd': case 'e':
+        case 'f': case 'g': case 'h': case 'i': case 'j':
+        case 'k': case 'l': case 'm': case 'n': case 'o':
+        case 'p': case 'q': case 'r': case 's': case 't':
+        case 'u': case 'v': case 'w': case 'x': case 'y':
+        case 'z':
+
+        case 'A': case 'B': case 'C': case 'D': case 'E':
+        case 'F': case 'G': case 'H': case 'I': case 'J':
+        case 'K': case 'L': case 'M': case 'N': case 'O':
+        case 'P': case 'Q': case 'R': case 'S': case 'T':
+        case 'U': case 'V': case 'W': case 'X': case 'Y':
+        case 'Z':
+        {
+            _currentTokenType = this.scanIdentifier();
+            return _currentTokenType;
+        };
+
+        //
+        // Zahlen
+        //
+
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        {
+            _currentTokenType = this.scanInteger();
+            return _currentTokenType;
+        };
+
+        //
+        // Operatoren
+        //
+
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+        {
+            _currentTokenType = this.scanOperator();
+            return _currentTokenType;
+        };
+
+        //
+        // Trenner
+        //
+
+        case '(':
+        case ')':
+        case ',':
+        case '.':
+        {
+            _currentTokenType = this.scanSeparator();
+            return _currentTokenType;
+        };
+
+        //
+        // unbekanntes Zeichen
+        //
+
+        default:
+        {
+            _currentToken.append(_currentChar);
+
+            this.nextChar();
+
+            _currentTokenType = TT_ERROR;
+
+            return TT_ERROR;
+        };
+    }
+
+    return TT_ERROR;
+}
+
+TokenType HTTPScanner::currentTokenType()
+{
+    return _currentTokenType;
+}
+
+void HTTPScanner::getTokenBuf(&String_16* tok)
+{
+    tok = _currentToken;
+}
+
+

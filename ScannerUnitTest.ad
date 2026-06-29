@@ -1,0 +1,24 @@
+class ScannerUnitTest
+{
+    int _testsRun;
+    int _testsPassed;
+    int _testsFailed;
+
+methods:
+
+    ScannerUnitTest();
+
+    int run();
+
+    int test(
+        &char testName[],
+        &char input[],
+        &char expected[]);
+
+    void appendToken(
+        &String_16 actual,
+        TokenType tt,
+        &String_16 token);
+
+    void printSummary();
+};

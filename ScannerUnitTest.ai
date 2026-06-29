@@ -1,0 +1,555 @@
+Import
+{
+    "Strings.ad",
+    "System.ad",
+    "TokenType.ad",
+    "HTTPScanner.ad",
+    "ScannerUnitTest.ad"
+}
+
+ScannerUnitTest::ScannerUnitTest()
+{
+    _testsRun    = 0;
+    _testsPassed = 0;
+    _testsFailed = 0;
+}
+
+int ScannerUnitTest::run()
+{
+    var PrintfClass pfc;
+
+    pfc.fstr("-----------------------------------------").pr();
+    pfc.fstr("HTTPScanner Unit Test").pr();
+    pfc.fstr("-----------------------------------------").pr();
+
+
+    this.test(
+        "Identifier 1",
+        "abc",
+        "IDENTIFIER abc\nEOF\n");
+
+
+    this.test(
+        "Identifier 2",
+        "abc123",
+        "IDENTIFIER abc123\nEOF\n");
+
+
+    this.test(
+        "Integer",
+        "123",
+        "INTEGER 123\nEOF\n");
+
+
+    this.test(
+        "Float",
+        "3.14",
+        "FLOAT 3.14\nEOF\n");
+
+
+    this.test(
+        "Exponent",
+        "3.14E-17",
+        "FLOAT 3.14E-17\nEOF\n");
+
+
+    //
+    // weitere Tests folgen in Teil 2
+    //
+
+    //
+// Identifier
+//
+
+this.test(
+    "Identifier 001",
+    "abc",
+    "IDENTIFIER abc\nEOF\n");
+
+this.test(
+    "Identifier 002",
+    "ABC",
+    "IDENTIFIER ABC\nEOF\n");
+
+this.test(
+    "Identifier 003",
+    "abc123",
+    "IDENTIFIER abc123\nEOF\n");
+
+this.test(
+    "Identifier 004",
+    "abc_123",
+    "IDENTIFIER abc_123\nEOF\n");
+
+this.test(
+    "Identifier 005",
+    "X",
+    "IDENTIFIER X\nEOF\n");
+
+
+//
+// Integer
+//
+
+this.test(
+    "Integer 001",
+    "0",
+    "INTEGER 0\nEOF\n");
+
+this.test(
+    "Integer 002",
+    "1",
+    "INTEGER 1\nEOF\n");
+
+this.test(
+    "Integer 003",
+    "17",
+    "INTEGER 17\nEOF\n");
+
+this.test(
+    "Integer 004",
+    "999999999",
+    "INTEGER 999999999\nEOF\n");
+
+
+//
+// Float
+//
+
+this.test(
+    "Float 001",
+    "1.0",
+    "FLOAT 1.0\nEOF\n");
+
+this.test(
+    "Float 002",
+    "3.14159",
+    "FLOAT 3.14159\nEOF\n");
+
+this.test(
+    "Float 003",
+    "17.25",
+    "FLOAT 17.25\nEOF\n");
+
+this.test(
+    "Float 004",
+    "3.14E7",
+    "FLOAT 3.14E7\nEOF\n");
+
+this.test(
+    "Float 005",
+    "3.14E-17",
+    "FLOAT 3.14E-17\nEOF\n");
+
+
+this.test(
+    "Operator Plus",
+    "+",
+    "PLUS\nEOF\n");
+
+this.test(
+    "Operator Minus",
+    "-",
+    "MINUS\nEOF\n");
+
+this.test(
+    "Operator Star",
+    "*",
+    "STAR\nEOF\n");
+
+this.test(
+    "Operator Slash",
+    "/",
+    "SLASH\nEOF\n");
+
+
+this.test(
+    "Separator Left",
+    "(",
+    "LPAREN\nEOF\n");
+
+this.test(
+    "Separator Right",
+    ")",
+    "RPAREN\nEOF\n");
+
+this.test(
+    "Separator Comma",
+    ",",
+    "COMMA\nEOF\n");
+
+this.test(
+    "Separator Dot",
+    ".",
+    "DOT\nEOF\n");
+
+
+this.test(
+    "Expression 001",
+    "abc+17",
+    "IDENTIFIER abc\nPLUS\nINTEGER 17\nEOF\n");
+
+this.test(
+    "Expression 002",
+    "(a+b)",
+    "LPAREN\nIDENTIFIER a\nPLUS\nIDENTIFIER b\nRPAREN\nEOF\n");
+
+this.test(
+    "Expression 003",
+    "abc+17*(x-3.5E-2)",
+    "IDENTIFIER abc\nPLUS\nINTEGER 17\nSTAR\nLPAREN\nIDENTIFIER x\nMINUS\nFLOAT 3.5E-2\nRPAREN\nEOF\n");
+
+
+this.test(
+    "Error 001",
+    "@",
+    "ERROR @\nEOF\n");
+
+this.test(
+    "Error 002",
+    "_abc",
+    "ERROR _\nIDENTIFIER abc\nEOF\n");
+
+this.test(
+    "Error 003",
+    "1.",
+    "ERROR 1.\nEOF\n");
+
+this.test(
+    "Error 004",
+    "1.E5",
+    "ERROR 1.E\nINTEGER 5\nEOF\n");
+
+this.test(
+    "Error 005",
+    "1.0E",
+    "ERROR 1.0E\nEOF\n");
+
+
+
+    this.printSummary();
+
+    return _testsFailed;
+}
+
+int ScannerUnitTest::test(
+        &char testName[],
+        &char input[],
+        &char expected[])
+{
+    var PrintfClass pfc;
+
+    _testsRun = _testsRun + 1;
+
+    pfc.fstr("Running $").sa(testName).pr();
+
+    //
+    // Teil 2:
+    //
+    // 1. Datei erzeugen
+    // 2. input hineinschreiben
+    // 3. HTTPScanner starten
+    // 4. Ausgabe erzeugen
+    // 5. expected vergleichen
+    //
+
+    _testsPassed = _testsPassed + 1;
+
+    pfc.fstr("PASS $").sa(testName).pr();
+
+    return 1;
+}
+
+
+void ScannerUnitTest::printSummary()
+{
+    var PrintfClass pfc;
+
+    pfc.fstr("-----------------------------------------").pr();
+
+    pfc.fstr("Tests executed : $")
+       .sa(_testsRun)
+       .pr();
+
+    pfc.fstr("Tests passed   : $")
+       .sa(_testsPassed)
+       .pr();
+
+    pfc.fstr("Tests failed   : $")
+       .sa(_testsFailed)
+       .pr();
+
+    pfc.fstr("-----------------------------------------").pr();
+}
+
+
+
+int ScannerUnitTest::test(
+        &char testName[],
+        &char input[],
+        &char expected[])
+{
+    var PrintfClass pfc;
+
+    var SPRFile* file = new SPRFile;
+
+    var HTTPScanner* scanner;
+
+    var String_16 actual;
+
+
+    var TokenType tt;
+
+    _testsRun = _testsRun + 1;
+
+    pfc.fstr("Running $").sa(testName).pr();
+
+    //
+    // temporäre Testdatei erzeugen
+    //
+
+    var String_16 dn("ScannerUnitTest.tmp");
+    if(file.oeffne(dn,SF_ReadWrite) != 1)
+    {
+        pfc.fstr("cannot create test file").pr();
+
+        _testsFailed = _testsFailed + 1;
+
+        return 0;
+    }
+
+    var String_16 si(input);
+    file.write(0,
+               si.length(),
+               input);
+
+    file.close();
+
+    //
+    // Datei wieder zum Lesen öffnen
+    //
+
+    if(file.oeffne(dn,SF_Readonly) != 1)
+    {
+        pfc.fstr("cannot reopen test file").pr();
+
+        _testsFailed = _testsFailed + 1;
+
+        return 0;
+    }
+
+    //
+    // Scanner starten
+    //
+
+    scanner = new HTTPScanner(file);
+
+    actual.assign("");
+
+    //
+    // komplette Datei scannen
+    //
+
+    while(1)
+    {
+        tt = scanner.nextToken();
+
+        var String_16* token; 
+        scanner.getTokenBuf(token);
+
+        switch(tt)
+        {
+            case TT_IDENTIFIER:
+            {
+                actual.append("IDENTIFIER ");
+                actual.append(token);
+                actual.append('\n');
+            };
+            break;
+
+            case TT_INTEGER:
+            {
+                actual.append("INTEGER ");
+                actual.append(token);
+                actual.append('\n');
+            };
+            break;
+
+            case TT_FLOAT:
+            {
+                actual.append("FLOAT ");
+                actual.append(token);
+                actual.append('\n');
+            };
+            break;
+
+            case TT_PLUS:
+            {
+                actual.append("PLUS\n");
+            };
+            break;
+
+            case TT_MINUS:
+            {
+                actual.append("MINUS\n");
+            };
+            break;
+
+            case TT_STAR:
+            {
+                actual.append("STAR\n");
+            };
+            break;
+
+            case TT_SLASH:
+            {
+                actual.append("SLASH\n");
+            };
+            break;
+
+            case TT_LPAREN:
+            {
+                actual.append("LPAREN\n");
+            };
+            break;
+
+            case TT_RPAREN:
+            {
+                actual.append("RPAREN\n");
+            };
+            break;
+
+            case TT_COMMA:
+            {
+                actual.append("COMMA\n");
+            };
+            break;
+
+            case TT_DOT:
+            {
+                actual.append("DOT\n");
+            };
+            break;
+
+            case TT_ERROR:
+            {
+                actual.append("ERROR ");
+                actual.append(token);
+                actual.append('\n');
+            };
+            break;
+
+            case TT_EOF:
+            {
+                actual.append("EOF\n");
+                inline_cpp[[ break; ]]
+            };
+        }
+
+        if(tt == TT_EOF)
+        {
+                inline_cpp[[ break; ]]
+        }
+    }
+
+    //
+    // Soll/Ist-Vergleich folgt im nächsten Abschnitt
+    //
+
+    return 1;
+}
+
+void ScannerUnitTest::appendToken(
+        &String_16 actual,
+        TokenType tt,
+        &String_16 token)
+{
+    switch(tt)
+    {
+        case TT_IDENTIFIER:
+        {
+            actual.append("IDENTIFIER ");
+            actual.append(token);
+            actual.append('\n');
+        };
+        break;
+
+        case TT_INTEGER:
+        {
+            actual.append("INTEGER ");
+            actual.append(token);
+            actual.append('\n');
+        };
+        break;
+
+        case TT_FLOAT:
+        {
+            actual.append("FLOAT ");
+            actual.append(token);
+            actual.append('\n');
+        };
+        break;
+
+        case TT_PLUS:
+        {
+            actual.append("PLUS\n");
+        };
+        break;
+
+        case TT_MINUS:
+        {
+            actual.append("MINUS\n");
+        };
+        break;
+
+        case TT_STAR:
+        {
+            actual.append("STAR\n");
+        };
+        break;
+
+        case TT_SLASH:
+        {
+            actual.append("SLASH\n");
+        };
+        break;
+
+        case TT_LPAREN:
+        {
+            actual.append("LPAREN\n");
+        };
+        break;
+
+        case TT_RPAREN:
+        {
+            actual.append("RPAREN\n");
+        };
+        break;
+
+        case TT_COMMA:
+        {
+            actual.append("COMMA\n");
+        };
+        break;
+
+        case TT_DOT:
+        {
+            actual.append("DOT\n");
+        };
+        break;
+
+        case TT_ERROR:
+        {
+            actual.append("ERROR ");
+            actual.append(token);
+            actual.append('\n');
+        };
+        break;
+
+        case TT_EOF:
+        {
+            actual.append("EOF\n");
+        };
+        break;
+    }
+}

@@ -1,0 +1,54 @@
+class HTTPScanner
+{
+    char _buffer[8192];
+
+    int _validBytes;
+    int _currentPtr;
+    int _filePos;
+    int _eof;
+
+    char _currentChar;
+
+    SPRFile* _file;
+
+    String_16* _currentToken;
+    TokenType _currentTokenType;
+
+    int _line;
+    int _column;
+
+methods:
+
+    HTTPScanner(SPRFile* file);
+
+
+    char nextChar();
+
+    TokenType nextToken();
+
+    TokenType scanIdentifier();
+
+    TokenType scanNumber();
+
+    TokenType scanOperator();
+
+    TokenType scanSeparator();
+ 
+    TokenType scanInteger();
+
+    TokenType scanFraction();
+
+    TokenType scanExponent();
+
+    void getTokenBuf(&String_16* tok);
+
+    void skipWhitespace();
+
+    int isLetter(char c);
+
+    int isDigit(char c);
+
+    void getToken(&String_16 token);
+
+    TokenType currentTokenType();
+};

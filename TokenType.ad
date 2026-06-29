@@ -1,0 +1,21 @@
+
+enum TokenType
+{
+    TT_EOF,
+
+    TT_IDENTIFIER,
+    TT_INTEGER,
+    TT_FLOAT,
+
+    TT_PLUS,
+    TT_MINUS,
+    TT_STAR,
+    TT_SLASH,
+
+    TT_LPAREN,
+    TT_RPAREN,
+    TT_COMMA,
+    TT_DOT,
+
+    TT_ERROR
+};
