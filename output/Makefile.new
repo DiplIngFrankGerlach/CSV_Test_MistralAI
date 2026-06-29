@@ -13,9 +13,13 @@ CSVLeser_MISTRAL.o \
 determineStackMemoryNeeds.o \
 determStackMemory_AppMain.ai.o \
 determStackMemory_CSVLeser_MISTRAL.ai.o \
+determStackMemory_ExpressionValuator_MISTRAL.ai.o \
+determStackMemory_Math.ai.o \
 determStackMemory_Strings.ai.o \
 determStackMemory_System.ai.o \
 determStackMemory_ZKNuetzlich.ai.o \
+ExpressionValuator_MISTRAL.o \
+Math.o \
 placementNewClass_AlphabeticSorter.o \
 placementNewClass_AlphaEntry.o \
 placementNewClass_Assigner_String_128.o \
@@ -24,7 +28,9 @@ placementNewClass_Benutzer_Umschalter.o \
 placementNewClass_CommandlineArgs.o \
 placementNewClass_Compare_String_128.o \
 placementNewClass_Compare_String_16.o \
+placementNewClass_Complex.o \
 placementNewClass_CSVLeser.o \
+placementNewClass_ExpressionEvaluator.o \
 placementNewClass_Hash_String_128.o \
 placementNewClass_Hash_String_16.o \
 placementNewClass_Hashable4.o \
@@ -32,6 +38,7 @@ placementNewClass_HexPrinter.o \
 placementNewClass_Input.o \
 placementNewClass_KeyType4.o \
 placementNewClass_Main.o \
+placementNewClass_Math.o \
 placementNewClass_MTSuperClass.o \
 placementNewClass_MultiThreadAdmin.o \
 placementNewClass_Mutex.o \

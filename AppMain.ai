@@ -2,12 +2,16 @@ Import
 {
   "Strings.ad",
   "System.ad",
+  "Math.ad",
   "CSVLeser_MISTRAL.ad",
+  
+  "ExpressionValuator_MISTRAL.ad",
   "AppMain.ad"
 }
 
 int Main::main()
 {
+   /*
    var PrintfClass pfc;
    var String_16 filename("daten.csv"); // Pfad zur CSV-Datei
    var String_16 delimiter(",");         // Trennzeichen (Komma)
@@ -20,6 +24,33 @@ int Main::main()
 
    // Gib das Ergebnis aus
    pfc.fstr("Durchschnittswert der 2. Spalte: $").sa(average).pr();
+   */
+
+
+    var PrintfClass pfc;
+    var ExpressionEvaluator evaluator;
+    var Math math;
+
+    // Testausdrücke
+    var String_16 expressions[8];
+    expressions[0].assign("3 + 4 * 2");
+    expressions[1].assign("(3 + 4) * 2");
+    expressions[2].assign("sin(0.5) + cos(0.5)");
+    expressions[3].assign("sqrt(16) + pow(2, 3)");
+    expressions[4].assign("abs(-5.5) * 2");
+    expressions[5].assign("log(10) + 1");
+    expressions[6].assign("2 * (3 + (4 * 5))");
+    expressions[7].assign("-10 + 20 / 2");
+
+    pfc.fstr("=== Sappeur Mathematik-Auswerter ===\\n").pr();
+
+    for(var int i = 0; i < 8; i++)
+    {
+        evaluator.setExpression(expressions[i]);
+        var double result = evaluator.evaluate();
+
+        pfc.fstr("Ausdruck: $ = $\\n").sa(expressions[i]).sa(result).pr();
+    }
 
    return 1;
 }

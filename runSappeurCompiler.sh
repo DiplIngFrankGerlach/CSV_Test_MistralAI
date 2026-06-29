@@ -54,6 +54,10 @@ compile Strings.ai
 compile ZKNuetzlich.ai
 
 compile CSVLeser_MISTRAL.ai
+
+compile ExpressionValuator_MISTRAL.ai
+
+compile Math.ai
 ###################################################################################################################
 # erzeuge die Stack Memory Bestimmung
 #####################################

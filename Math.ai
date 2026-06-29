@@ -1,3 +1,9 @@
+Import
+{
+  "Strings.ad",
+  "System.ad",
+  "Math.ad"
+}
 
 int Math::shlC(int x)
 {

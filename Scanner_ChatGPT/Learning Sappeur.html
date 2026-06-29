@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="de" >
+<meta charset="utf-8">
+<link rel="stylesheet" href="simple_fg.css" >
+
+
+<head>
+<meta name="google-site-verification" content="kICY_WfrlJHwhCImM5fslrSetovc-th5b6Eg-ZDWjiA" >
+<meta name="msvalidate.01" content="6D427382B6D13EBF1C5287A26E213E69" >
+
+  <title>Learning Sappeur</title>
+</head>
+
+<body>
+
+<h1>Learning Sappeur</h1>
+<table >
+<tr>
+<td>
+<h3>Sichere Informatik aus Deutschland</h3> </td>
+<td>
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg" height=50 align="left" >
+</td>
+</tr>
+</table>
+
+
+<img src="Flag_of_the_United_Kingdom.svg" width="20" >
+
+<a href="https://translate.google.com/translate?sl=auto&tl=en&u=https://sappeur.di-fg.de/Learning.html">English Translation</a>
+
+<p>
+</p>
+
+<h2>1. Hello World</h2>
+
+<p>
+In the following Sappeur code, the Main::main() method(which is always run first) is
+first creating a PrintfClass object pfc. Then a format string (fstr() method) is set
+and the output is done with the pr() method. As the method must return an integer, the
+fixed number 1 is returned.
+
+<pre>
+int Main::main()
+{
+  var PrintfClass pfc;
+  pfc.fstr("Hello World").pr();
+
+  return 1;
+}
+</pre>
+
+<h2>2. Basic Variable Types</h2>
+
+<p>
+In the following example, three variables are declared. Two of them are 32 bit integers, the third
+is a string object. The square and the string are then printed on the console.
+</p>
+
+<pre>
+int Main::main()
+{
+  var PrintfClass pfc;
+  var int aNumber = 10;
+  var String_16 aStr;
+  aStr.append("abc");
+  aStr.append("123");
+  var int square = aNumber * aNumber;
+  
+  pfc.fstr("square is:$ str:$").sa(square).sa(aStr).pr();
+}
+</pre>
+
+
+<h2>3. Loops</h2>
+
+<h3>For Loop</h3>
+
+<pre>
+int Main::main()
+{
+  var PrintfClass pfc;
+  for(var int i=0; i < 10; i++)
+  {  
+     pfc.fstr("loop number:$").sa(i).pr();
+  }
+
+
+  return 1;
+}
+</pre>
+
+<h3>While Loop</h3>
+
+
+<pre>
+int Main::main()
+{
+  var PrintfClass pfc;
+  var int i=0;
+  while( i < 10 )
+  {  
+     pfc.fstr("loop number:$").sa(i).pr();
+     i = i + 1;
+  }
+
+
+  return 1;
+}
+</pre>
+
+<h3>Do-While Loop</h3>
+
+
+<pre>
+int Main::main()
+{
+  var PrintfClass pfc;
+  var int i=0;
+  do
+  {
+     pfc.fstr("loop number:$").sa(i).pr();
+     i = i + 1;
+  }
+  while( i < 10);
+
+
+  return 1;
+}
+</pre>
+
+<h2>4. Casting Variables</h2>
+ 
+<pre>
+int Main::main()
+{
+  var PrintfClass pfc;
+ 
+  var int thickness = 7;
+
+  var double circumference = cast(double,thickness) * 3.1415;
+
+  pfc.fstr("a barrel of $cm thickness has a circumference of $cm").sa(thickness).sa(circumference).pr();
+
+
+
+  return 1;
+}
+</pre>
+
+<h2>5. Methods</h2>
+
+<p>Methods must be declared inside their class (in the *.ad file) and then realized/defined in
+the *.ai file.</p>
+
+<p>In AppMain.ad:</p> 
+<pre>
+
+class MyMath
+{
+methods:
+   int faculty(int x); 
+};
+</pre>
+
+<p>In AppMain.ai:</p> 
+<pre>
+int MyMath::faculty(int x)
+{
+    if(x == 0)
+    {
+       return 1;
+    }
+    else
+    {
+       return x * this.faculty(x - 1);//spacing in "x - 1" important !
+    }
+    return -1;//only formally needed
+}
+</pre>
+
+<p>Note that, for reasons of simplicity, this algorithm does not test for integer overflow.</p>
+
+<h2>6. Memory Allocation</h2>
+
+<h3>Stack Allocation And A Bit of Math</h3>
+
+<pre>
+
+int Main::main()
+{
+  var PrintfClass pfc;
+  var Math m;
+  var double vector3d[3];
+
+  vector3d[0] = 10.0;
+  vector3d[1] = 20.0;
+  vector3d[2] = 30.0;
+
+  var double length = m.wurzel( (vector3d[0] * vector3d[0]) + (vector3d[1] * vector3d[1] ) + (vector3d[2] * vector3d[2]) );
+  pfc.fstr("length of vector is $").sa(length).pr();
+
+  return 1;
+}
+
+</pre>
+
+<h3>Heap Allocation And A Bit of Math</h3>
+
+<pre>
+
+int Main::main()
+{
+  var PrintfClass pfc;
+  var Math m;
+  var *double vector3d[] = new double[3];
+
+  vector3d[0] = 10.0;
+  vector3d[1] = 20.0;
+  vector3d[2] = 30.0;
+
+  var double length = m.wurzel( (vector3d[0] * vector3d[0]) + (vector3d[1] * vector3d[1] ) + (vector3d[2] * vector3d[2]) );
+  pfc.fstr("length of vector is $").sa(length).pr();
+
+  return 1;
+}
+
+</pre>
+
+<h2>7. User Defined Data Types</h2>
+
+<p>
+UDTs are always realized as Sappeur classes in a *.ad file:
+</p>
+<pre>
+class Address
+{
+    char firstname[20];
+    char lastname[20];
+    char street[40];
+    int postcode;
+methods:
+};
+</pre>
+
+<p>
+Usage of the UDT:
+</p>
+<pre>
+int Main::main()
+{
+    var *Address listOfAddresses[] = new Address[100];//allocate 100 addresses in heap
+
+    listOfAddresses[0].firstname[0] = 'K';
+    listOfAddresses[0].firstname[1] = 'a';
+    listOfAddresses[0].firstname[2] = 'r';
+    listOfAddresses[0].firstname[3] = 'l';
+    listOfAddresses[0].firstname[4] = '\0';
+    listOfAddresses[0].lastname[0] = 'M';
+    ...
+    listOfAddresses[0].postcode = 12345;
+
+}
+
+</pre>
+<p>
+Note that the character strings of this example would likely be of the String_16 type
+for production programs. Plain char arrays are used for simplicity here.
+</p>
+
+<h2>8. String Objects From the Standard Library(String_16...)</h2>
+
+<p>
+First it is important to understand the Sappeur String class concept: In order to
+save runtime on expensive heap memory operations, they have a built-in, fixed buffer of
+typically 16 octets(String_16). This buffer is used initially, until it overflows
+and a heap-based buffer is allocated. The idea is to save heap allocation on
+short strings. Of course the heap-based buffer will also grow automatically.
+</p>
+
+<h3>String_16, String_32, String_128</h3>
+
+<p>
+String_16 is widely used in the 
+<a href="https://github.com/DiplIngFrankGerlach/SprStandardLib">Sappeur Standard Library</a>.
+As the String class is defined as an m4 macro, the String class can be
+parameterized for various sizes of the preallocated buffer. For example, the String_128
+class has a built-in buffer of 128 octets.
+</p>
+
+<h2>9. Console Output</h2>
+
+<p>
+PrintfClass is a memory safe wrapper around the unsafe printf() C function. Similar to
+printf(), it allows for a format string(set with fstr()), setting of format string arguments
+using the sa() functions and printing the format string with parameters using the pr()
+method. Inside the format string, argument placeholders are specified with the "$" sign.
+</p>
+
+<pre>
+   Example:
+
+   var PrintfClass pfc;
+   var int x = 3;
+   var int y = x * x;
+   pfc.fstr("the square of $ is $").sa(x).sa(y).pr();
+</pre>
+
+
+<p>
+The sa() method is polymorphic and allows for various types such as integers, floats,
+doubles
+and strings. 
+</p>
+
+
+Also, the sa() method for integers has an overloaded version that can
+control the number base and the number of characters. 
+
+
+</p>
+
+<pre>
+   Example:
+
+   var PrintfClass pfc;
+   var int year = 1170;
+   var String_16 man("Walther von der Vogelweide");
+   pfc.fstr("$ was born in year $").sa(man).sa(year).pr();
+   pfc.fstr("The birth year in hexadecimal is $, and $ in octal").sa(year,16,4).sa(year,8,4).pr();
+</pre>
+
+<p>
+If you need other specialized sa()
+methods, feel free to extend PrintfClass with your own method, which implements the
+needed functionality.
+</p>
+
+<pre>
+   Example for an extended sa()/Set Argument method:
+
+   (inline_cpp[[ ]] allows for the insertion of (unsafe) C++ code)
+
+   &PrintfClass PrintfClass::sa(double x,int width, int digitsAfterPoint)
+   {
+      var char stackBuffer[32];
+      var String_16 formatString;
+      if( (width >= 1) && (width < 30)  && (digitsAfterPoint >= 0) && (digitsAfterPoint < 28))
+      {
+          formatString.append("%");
+          formatString.append(width);
+          formatString.append(".");
+          formatString.append(digitsAfterPoint);
+          formatString.append("f");
+          var char formatStrBuffer[16];
+          formatString.toCharArray(formatStrBuffer);
+          inline_cpp[[
+             snprintf(stackBuffer._array,32,formatStrBuffer._array,x);
+          ]]
+          this.sa(stackBuffer);
+      }
+      else
+      {
+          this.sa("[width and/or digitsAfterPoint improperly specified]");
+      }
+      return thisref;
+   }
+</pre>
+
+
+<h2>10. Inlining C++ Code</h2>
+
+<p>
+In order to execute operating system calls and to use C and C++ based libraries,
+C++ code must be integrated and called by Sappeur code. Of course this code
+could potentially contain memory errors and should therefore be as small as
+possible. Senior C++ developers should create and review these C++ code sections.
+It also makes sense to test-run the resulting programs with a memory checker such
+as Purify or valgrind. Note that this approach is still vastly more secure
+and robust than an equivalent C or C++ program, as the unsafe sections are
+typically a very small percentage of the entire program. The Sappeur Standard Library
+is built on this approach.
+</p>
+
+
+<p>
+In the following example, printf() is called from Sappeur code. Note that
+this is only for demonstration purpose and production programs should use
+(if possible) PrintfClass instead.
+</p>
+
+<pre>
+
+//print the first 100 numbers in hexadecimal
+
+for(var int i=0; i < 100; i++)
+{
+    inline_cpp[[ printf("%x\\n",i); ]]
+}
+</pre>
+<p>
+Note the double backslash; one BS is removed by the Sappeur Compiler and
+ony one BS will be in the generated C++ code.
+</p>
+
+
+<h2>11. Importing Other Modules to a Compilation unit</h2>
+
+<p>
+All user-defined data types must be defined as classes in a declaration
+file(*.ad). All source code is defined in methods, which must be
+stored in implementation files ("*.ai"). The implementation file must
+"import" all declaration files which are needed to compile the implementation
+code. This also includes the dependencies between declaration files and
+must be in the proper order to correctly resolve types during the compilation.
+In the following example, he Import Statement of the Scanner(part of the gauss
+web server) is shown.
+</p>
+
+<pre>
+//Declaration of Scanner class in Scanner.ad
+//
+class Scanner{
+   char _buffer[10000];
+   int _validBytes;
+   int _currentPtr;
+   int _filePos;
+   SPRFile* _f;
+   String_16* _currentToken;
+   char _currentChar;
+   int _eof;
+   TokenType _currentTokenType;
+
+   int macheHilfsAusgabe;
+
+   String_16 zkEingabe;//anderweitige Eingabe, also nicht per Datei
+   int zkEingabeStelle;
+methods:
+   Scanner(&String_16 eingabe);
+   Scanner(SPRFile* f);
+   int isLetter(char c);
+
+   int isNumeral(char c);
+   TokenType nextToken();
+   TokenType currentTokenType();
+   char nextChar();
+   void getTokenBuf(&String_16* currentToken);
+
+   void setLogging(int ww);
+
+   void log();
+
+   void UnitTest();
+};
+</pre>
+
+<pre>
+//Excerpt of File Scanner.ai from the Gauss web server project
+//
+//Import the declarations of the String classes, the Systemclasses
+//(console printing, files,...) and the Scanner
+//class. Note that the order is important for resolving dependencies in between
+//the declaration files.
+Import{
+   "Strings.ad",
+   "System.ad",
+   "Scanner.ad"
+}
+
+//The constructor of the scanner class
+Scanner::Scanner(SPRFile* f)
+{
+   _f=f;
+   _currentToken=new String_16;
+   _validBytes=0;
+   _currentPtr=0;
+   _filePos=0;
+   _eof=0;
+   this.nextChar();
+   macheHilfsAusgabe = 0;
+   zkEingabeStelle = -1;
+}
+
+//some code omitted
+
+//Implementation of the isLetter() method
+int Scanner::isLetter(char c)
+{
+   switch(c)
+   {
+      case 'a':case 'b':case 'c':case 'd':case 'e': case 'f':case 'g':case 'h':case 'i':
+      case 'j':case 'k':case 'l':case 'm':case 'n': case 'o':case 'p':case 'q':case 'r':
+      case 's':case 't':case 'u': case 'v':case 'w':case 'x':case 'y':case 'z':
+      {
+         return 1;
+      };
+      default:{return 0;};
+   }
+   return 0;
+}
+
+//Implementation of the isNumeral() method
+int Scanner::isNumeral(char c)
+{
+   switch(c)
+   {
+       case '0':case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8': case '9':
+       {
+          return 1;
+       };
+       break;
+   }
+   return 0;
+}
+
+//some code omitted
+</pre>
+
+<p>
+Each Sappeur implementation file(*.ai) will become a C++ file/compilation unit.
+The stem name of the implementation file will become the stem of the C++ file name.
+E.g. out of Scanner.ai, Scanner.cpp will be generated.
+</p>
+
+<h2>12. Using Hashtables</h2>
+
+<p>
+In the following sample code, the generic Hashtable from the Sappeur Standard Library has
+been used.
+</p>
+
+
+<pre>
+   var SPHT_String_16_String_16 ht;//a hash table with string keys and string values
+
+   var String_16 k("123");
+   var String_16 v("abc");
+
+   ht.insert(k,v);
+
+   //fill the hashtables with 10000 more entries
+   for(var int i=0; i < 10000; i++)
+   {
+       k.assign("k_");
+       k.append(i);
+       v.assign("v_");
+       v.append(i);
+       ht.insert(k,v);
+   }
+
+   //check whether the first added entry is still inside the table
+   k.assign("123");
+   if( (ht.search(k,v) == 1) && (v.equals("abc")==1) )
+   {
+       pfc.fstr("Erfolg").pr();
+   }
+   else
+   {
+       pfc.fstr("Fehler im HT Test").pr();
+       return -1;
+   }
+
+</pre>
+
+<h3>12.2 Generating Hashtable classes</h3>
+
+<p>
+If you need to create a new Hashtable, use the generic Hashtable class
+from the Sappeur Standard Library:
+
+<a href="https://github.com/DiplIngFrankGerlach/SprStandardLib/blob/main/Hashtable.ad.m4">Hashtable.ad.m4"</a>,
+<a href="https://github.com/DiplIngFrankGerlach/SprStandardLib/blob/main/Hashtables.ai.m4">Hashtables.ai.m4"</a>.
+
+To do so, add your own m4 generation command:
+</p>
+
+<pre>
+//Example: int-float Hashtable in Hashtables.ai.m4
+SPHT_IMPL(int,float,Hash_int,Compare_int,Assigner_int,Assigner_float)
+</pre>
+<pre>
+//Example: int-float Hashtable in Hashtable.ad.m4
+SPHT(int,float,Hash_int,Compare_int,Assigner_int,Assigner_float)
+</pre>
+
+<p>
+Note that Assigner_float adapter class has not yet been implemented in the Standard Library. 
+Use the Assigner_int class as a template for this. The m4 macro processor is then
+typically run in grundlegend.sh on each compilation run.
+</p>
+
+<h2>13. Reading Command Line Arguments</h2>
+
+<pre>
+   var CommandlineArgs cla;//class from System.ad
+
+   if( cla.numberOfArguments() == 2 )//read the number of arguments, including the program name 
+   {
+      var String_16 argument1;
+      cla.getArgument(1,argument1);//read the first argument into a string
+   }
+   else
+   {
+       pfc.fstr("usage: program <parameter>").pr();
+       return -1;
+   }
+</pre>
+
+<h2>14. Memory Management Considerations</h2>
+
+<p>
+All heap memory is managed by means of reference counters inside the objects pointed at.
+All pointers are implicitly smart pointers.
+This has several notable consequences for large scale data structures:
+</p>
+
+<h3>14.2 Pointer Cycles</h3>
+
+<p>
+Data structures with cyclic pointers will create heap garbage, which cannot be automatically
+collected. The cycles must be broken by the software engineer in his explicit program code.
+</p>
+
+<h3>14.3 Very Long Pointer Chains</h3>
+
+<p>
+Pointer chains (e.g. a linear list) can be automatically garbage-collected, if the chain is
+moderate in size. Long chains will generate a deep call stack of destructors, though. This
+can trigger a Stack Overflow and a Program Stop. The solution to this problem is to
+create a small array of pointers(e.g. 1/300th of the linear list) and then point from this
+array into equal sized sections of the linear list. Then the leftmost pointer to the linear
+list can be safely nulled and after that the array can be nulled incrementally.
+This way the destructor stack overflow is avoided. A generic linked list class can
+implement this garbage strategy very conveniently.
+</p>
+
+<h3>14.4 Realtime Considerations of Memory Management</h3>
+
+<p>
+Heap memory allocation and deallocation is inherently unable to execute under hard
+realtime constraints. Even worse, memory fragmentation could make memory
+allocation impossible, despite large amounts of free memory nominally available.
+Hard realtime programs should allocate heap memory during a startup phase and
+not deallocate any memory at all. Soft-realtime behaviour of Sappeur is typically
+very good, though. The software engineer can control allocation and freeing of
+heap memory in very fine increments, which typically yields very good GUI 
+responsiveness and ergonomics. It is also advised to re-use heap buffers as
+much as possible in inner loops. For example, String_16 objects should be reused
+as much as possible instead of re-creating them a large number of times.
+</p>
+
+<h2>15 Arrays</h2>
+
+<p>
+Arrays are key basic data structures, on which other important data structures
+are built upon.
+</p>
+
+<h3>15.2 Arrays of basic types</h3>
+
+<pre>
+    var char stringBuffer[30];//fixed buffer of 30 characters
+
+    var int vector[3];//3D vector of 32 bit, signed  integers
+
+    var double spaceVector[3];//3D vector of the double(typically IEE754 double) type
+</pre>
+
+<p>
+The arrays above are allocated on the stack, which is very fast, but heap size is 
+limited. Large allocations will trigger a heap overflow on execution.
+</p>
+
+
+<h3>15.3 Allocating Arrays on the heap</h3>
+
+<pre>
+    var *char sbPointer[] = new char[30];//fixed buffer of 30 characters
+
+    var *int vPointer[] = new int[3];//3D vector of 32 bit, signed  integers
+
+    var *double spvPointer[] = new double[3];//3D vector of the double(typically IEE754 double) type
+</pre>
+
+<p>Note that these allocations might fail at runtime due to exhaustion or due to heap
+   fragmentation.
+</p>
+
+<h3>15.3 Allocating Arrays of User Defined Types</h3>
+
+<p>Example n-body simulation:</p>
+
+<pre>
+//In a declaration (*.ad) file:
+
+class PlanetOrSun
+{
+    String_16 name;
+
+    //Position in m
+    double x;
+    double y;
+    double z;
+
+    //Speed in m/s
+    double vx;
+    double vy;
+    double vz;
+
+    //mass in kg
+    double mass;
+methods:
+    //no methods in this example
+};
+</pre>
+
+<p>Allocating a number of planets on the heap in (*.ai):</p>
+
+<pre>
+    var *PlanetOrSun system[]  = new PlanetOrSun[30];//create a system with 30 bodies
+
+    //initialize the star:
+    system[0].name.assign("Sun");
+    system[0].mass = 1.989e30; // Masse der Sonne in kg
+    system[0].x = 0.0;
+    system[0].y = 0.0;
+    system[0].z = 0.0;
+    system[0].vx = 0.0;
+    system[0].vy = 0.0;
+    system[0].vz = 0.0;
+
+    //initialize a planet:
+    system[1].name.assign("Earth");
+    system[1].mass = 5.972e24; // Masse der Erde in kg
+       // Position der Erde relativ zur Sonne (mittlere Entfernung: 1 AE = 1.496e11 m)
+    system[1].x = 1.496e11; // 1 Astronomische Einheit (AE) in Metern
+    system[1].y = 0.0;
+    system[1].z = 0.0;
+       // Geschwindigkeit der Erde (Umlaufgeschwindigkeit: ~29.78 km/s)
+    system[1].vx = 0.0;
+    system[1].vy = 29780.0; // 29.78 km/s in m/s
+    system[1].vz = 0.0;
+</pre>
+
+<p>Note that the C++ and C distinction of pointers and "direct" object(syntax "->" and ".") is not done
+   on the Sappeur level. Neither is the "*" operator needed in this case.
+</p>
+
+
+<h2>Formelles, Kontakt</h2>
+<a href="https://di-fg.de/Kontakt.html">Impressum</a>
+<p> <a href="DatenschutzErklaerung.html">Datenschutz-Erkl&auml;rung</a> </p>
+
+</body>
+
+</html>

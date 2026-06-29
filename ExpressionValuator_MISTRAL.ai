@@ -6,6 +6,8 @@ Import {
    "ExpressionValuator_MISTRAL.ad"
 }
 
+
+
 // --- ExpressionEvaluator Implementierung ---
 ExpressionEvaluator::ExpressionEvaluator()
 {
@@ -22,14 +24,14 @@ void ExpressionEvaluator::skipWhitespace()
 {
     while(_pos < _expression.length())
     {
-        char c = _expression.charAt(_pos);
-        if((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'))
+        var char c = _expression.getAt(_pos);
+        if(((c == ' ') || (c == '\t')) || ((c == '\n') || (c == '\r')))
         {
             _pos = _pos + 1;
         }
         else
         {
-            break;
+            return;
         }
     }
 }
@@ -39,7 +41,7 @@ char ExpressionEvaluator::peekChar()
     this.skipWhitespace();
     if(_pos < _expression.length())
     {
-        return _expression.charAt(_pos);
+        return _expression.getAt(_pos);
     }
     return '\0';
 }
@@ -49,7 +51,7 @@ char ExpressionEvaluator::nextChar()
     this.skipWhitespace();
     if(_pos < _expression.length())
     {
-        char c = _expression.charAt(_pos);
+        var char c = _expression.getAt(_pos);
         _pos = _pos + 1;
         return c;
     }
@@ -58,20 +60,27 @@ char ExpressionEvaluator::nextChar()
 
 int ExpressionEvaluator::isDigit(char c)
 {
-    return ((c >= '0') && (c <= '9')) || (c == '.');
+    if(((c >= '0') && (c <= '9')) || (c == '.'))
+    {
+        return 1;
+    }
+    return 0;
 }
 
 int ExpressionEvaluator::isAlpha(char c)
 {
-    return ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'));
+    if(((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z')))
+    {
+        return 1;
+    }
+    return 0;
 }
 
 double ExpressionEvaluator::parseNumber()
 {
     var String_16 numStr;
-    char c = this.peekChar();
+    var char c = this.peekChar();
 
-    // Optional: Unäres Minus
     if(c == '-')
     {
         numStr.append('-');
@@ -79,124 +88,129 @@ double ExpressionEvaluator::parseNumber()
         c = this.peekChar();
     }
 
-    // Ziffern und Dezimalpunkt sammeln
-    while(this.isDigit(c) || (c == '.'))
+    while((this.isDigit(c) == 1) || (c == '.'))
     {
         numStr.append(c);
         this.nextChar();
         c = this.peekChar();
     }
 
-    // Konvertiere String zu double
-    inline_cpp[[
-        return atof(numStr._buffer);
-    ]]
-    return 0.0; // Fallback
+    inline_cpp[[ return atof(numStr._buffer); ]]
+    return 0.0;
 }
 
 double ExpressionEvaluator::parseFunction()
 {
     var String_16 funcName;
-    char c = this.nextChar(); // Lesen des ersten Buchstabens
+    var char c = this.nextChar();
 
-    // Funktionsname sammeln
-    while(this.isAlpha(c))
+    while(this.isAlpha(c) == 1)
     {
         funcName.append(c);
         c = this.nextChar();
     }
 
-    // Öffnende Klammer erwarten
     if(c != '(')
     {
-        // Keine Funktion, sondern Variable -> Fehler oder 0 zurückgeben
         return 0.0;
     }
 
-    // Argument parsen
-    this.nextChar(); // '(' überspringen
-    double arg = this.parseExpression();
+    this.nextChar();
+    var double arg = this.parseExpression();
 
-    // Schließende Klammer erwarten
     c = this.peekChar();
     if(c == ')')
     {
-        this.nextChar(); // ')' überspringen
+        this.nextChar();
     }
     else
     {
-        // Fehler: Keine schließende Klammer
         return 0.0;
     }
 
-    // Funktion auswerten
-    if(funcName.equals("sin"))
+    if(funcName.equals("sinus") == 1)
     {
-        return _math.sin(arg);
+        return _math.sinus(arg);
     }
-    else if(funcName.equals("cos"))
+    else
     {
-        return _math.cos(arg);
-    }
-    else if(funcName.equals("sqrt"))
-    {
-        return _math.sqrt(arg);
-    }
-    else if(funcName.equals("log"))
-    {
-        return _math.log(arg);
-    }
-    else if(funcName.equals("abs"))
-    {
-        return _math.abs(arg);
-    }
-    else if(funcName.equals("pow"))
-    {
-        // Zweites Argument für pow
-        c = this.peekChar();
-        if(c == ',')
+        if(funcName.equals("cosinus") == 1)
         {
-            this.nextChar(); // ',' überspringen
-            double exponent = this.parseExpression();
-            return _math.pow(arg, exponent);
+            return _math.cosinus(arg);
         }
-        return _math.pow(arg, 2.0); // Default: Quadrat
-    }
-
-    return 0.0; // Unbekannte Funktion
+        else
+        {
+            if(funcName.equals("sqrt") == 1)
+            {
+                return _math.wurzel(arg);
+            }
+            else
+            {
+                /*
+                if(funcName.equals("log") == 1)
+                {
+                    return _math.log(arg);
+                }
+                else
+                {
+                    if(funcName.equals("abs") == 1)
+                    {
+                        return _math.abs(arg);
+                    }
+                    else
+                    {
+                        if(funcName.equals("pow") == 1)
+                        {
+                            c = this.peekChar();
+                            if(c == ',')
+                            {
+                                this.nextChar();
+                                var double exponent = this.parseExpression();
+                                return _math.pow(arg, exponent);
+                            }
+                            return _math.pow(arg, 2.0);
+                        }
+                        else
+                        {
+                            return 0.0;
+                        }
+                    }
+                }
+                */
+            }
+        }
+    } 
+    return 0.0;
 }
 
 double ExpressionEvaluator::parseFactor()
 {
-    char c = this.peekChar();
-    double result = 0.0;
+    var char c = this.peekChar();
+    var double result = 0.0;
 
     if(c == '(')
     {
-        this.nextChar(); // '(' überspringen
+        this.nextChar();
         result = this.parseExpression();
         c = this.peekChar();
         if(c == ')')
         {
-            this.nextChar(); // ')' überspringen
+            this.nextChar();
         }
-        else
-        {
-            // Fehler: Keine schließende Klammer
-        }
-    }
-    else if(c == '-' || this.isDigit(c))
-    {
-        result = this.parseNumber();
-    }
-    else if(this.isAlpha(c))
-    {
-        // Funktion oder Variable (hier nur Funktionen unterstützt)
-        result = this.parseFunction();
     }
     else
     {
-        // Fehler: Unerwartetes Zeichen
+        if((c == '-') || (this.isDigit(c) == 1))
+        {
+            result = this.parseNumber();
+        }
+        else
+        {
+            if(this.isAlpha(c) == 1)
+            {
+                result = this.parseFunction();
+            }
+        }
     }
 
     return result;
@@ -204,23 +218,22 @@ double ExpressionEvaluator::parseFactor()
 
 double ExpressionEvaluator::parseTerm()
 {
-    double result = this.parseFactor();
-    char c = this.peekChar();
+    var double result = this.parseFactor();
+    var char c = this.peekChar();
 
     while((c == '*') || (c == '/'))
     {
-        this.nextChar(); // Operator überspringen
-        double nextFactor = this.parseFactor();
+        this.nextChar();
+        var double nextFactor = this.parseFactor();
 
         if(c == '*')
         {
             result = result * nextFactor;
         }
-        else if(c == '/')
+        else
         {
             if(nextFactor == 0.0)
             {
-                // Division durch Null vermeiden
                 result = 0.0;
             }
             else
@@ -237,19 +250,19 @@ double ExpressionEvaluator::parseTerm()
 
 double ExpressionEvaluator::parseExpression()
 {
-    double result = this.parseTerm();
-    char c = this.peekChar();
+    var double result = this.parseTerm();
+    var char c = this.peekChar();
 
     while((c == '+') || (c == '-'))
     {
-        this.nextChar(); // Operator überspringen
-        double nextTerm = this.parseTerm();
+        this.nextChar();
+        var double nextTerm = this.parseTerm();
 
         if(c == '+')
         {
             result = result + nextTerm;
         }
-        else if(c == '-')
+        else
         {
             result = result - nextTerm;
         }
@@ -266,35 +279,3 @@ double ExpressionEvaluator::evaluate()
     return this.parseExpression();
 }
 
-// --- Main Implementierung ---
-int Main::main()
-{
-    var PrintfClass pfc;
-    var ExpressionEvaluator evaluator;
-    var Math math;
-
-    // Testausdrücke
-    var String_16 expressions[] =
-    {
-        "3 + 4 * 2",
-        "(3 + 4) * 2",
-        "sin(0.5) + cos(0.5)",
-        "sqrt(16) + pow(2, 3)",
-        "abs(-5.5) * 2",
-        "log(10) + 1",
-        "2 * (3 + (4 * 5))",
-        "-10 + 20 / 2"
-    };
-
-    pfc.fstr("=== Sappeur Mathematik-Auswerter ===\\n").pr();
-
-    for(var int i = 0; i < 8; i++)
-    {
-        evaluator.setExpression(expressions[i]);
-        double result = evaluator.evaluate();
-
-        pfc.fstr("Ausdruck: $ = $\\n").sa(expressions[i]).sa(result).pr();
-    }
-
-    return 1;
-}
