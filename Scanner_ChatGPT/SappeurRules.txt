@@ -36,16 +36,54 @@ Rule 4: Always use "var" in front of stack allocated variables.
           var int x=5;
           var String_16 aString("abc");
 
-Rule5: Do not used "=" operator for objects. Usually there is an assign() method for that.
-       Example:
+Rule 5: Do not used "=" operator for objects. Usually there is an assign() method for that.
+        Example:
          var String_16 stringSource("abc");
          var String_16 stringTarget;
          stringTarget.assign(stringSource);
 
-Rule7: Access String characters using the getAt(int index) method:
-       Example:
+Rule 7: Access String characters using the getAt(int index) method:
+        Example:
          var String_16 string("abc");
          var char c = string.getAt(2);
 
 Rule 8: there is neither the continue nor the break keyword in loops.
         Do not use them.
+
+Rule 9: Do not perform arithmetic calculations in if clauses.
+        Instead, perform calculations before and only make comparisons.
+        Example:
+          var int mod = x % 33;
+          if( mod == 9)
+          { this.doSomething(); }
+
+Rule 10: Only use homogeneous operators in a logical expression such as
+         if and while clauses. Do not mix two types of logical expressions
+         without braces. 
+         Example:
+            if( (x==5) && (z==6) && (t != 3) )
+            { this.doSomething(); }
+
+Rule 11: There is no Negation ("!") Operator. Instead, use De Morgan rules
+         and equal/not equal operators.
+         Example:
+           WRONG: if( !(( x==3) || (y == 4)) ) { this.doSomething(); }
+           RIGHT: if( (( x!=3) && (y != 4)) ) { this.doSomething(); }
+
+Rule 12: Always use "this" to call a method of the same class.
+         Example:
+           if( x > = 1 ) { return x * this.faculty(x - 1); }
+           else return 1;
+
+Rule 13: If you want to subtract a constant from, make sure there
+         is a space between the minus and the constant.
+         Example:
+           var int y = x - 1;
+
+Rule 14: When you need a negative constant, put the minus directly
+         in front of the constant.
+         Example:
+           var int y = x * -1;
+ 
+
+
