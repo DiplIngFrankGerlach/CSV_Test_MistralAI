@@ -15,7 +15,7 @@
 ###################################################################################################################
 # Setze das Sappeur Verzeichnis
 ###############################
-export SPR_VERZ=~/Sappeur4x/ausg/haupt
+export SPR_VERZ=~/Sappeur_4.18/
 
 
 
@@ -56,6 +56,10 @@ compile ZKNuetzlich.ai
 compile CSVLeser_MISTRAL.ai
 
 compile ExpressionValuator_MISTRAL.ai
+
+compile SimpleString.ai
+
+compile SimpleStringTest.ai
 
 compile Math.ai
 ###################################################################################################################

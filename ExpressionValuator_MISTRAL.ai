@@ -95,7 +95,7 @@ double ExpressionEvaluator::parseNumber()
         c = this.peekChar();
     }
 
-    inline_cpp[[ return atof(numStr._buffer); ]]
+    numStr.asDouble();
     return 0.0;
 }
 

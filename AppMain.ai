@@ -2,6 +2,8 @@ Import
 {
   "Strings.ad",
   "System.ad",
+  "SimpleString.ad",
+  "SimpleStringTest.ad",
   "Math.ad",
   "CSVLeser_MISTRAL.ad",
   
@@ -26,8 +28,13 @@ int Main::main()
    pfc.fstr("Durchschnittswert der 2. Spalte: $").sa(average).pr();
    */
 
-
     var PrintfClass pfc;
+    var int ut_result;
+    SimpleStringTest::run(ut_result);
+    if(ut_result == 1) { pfc.fstr("SimpleStringTest::run() ERFOLG !").pr(); }
+    else { pfc.fstr("SimpleStringTest::run() Fehler Nr $ !").sa(ut_result).pr(); }
+
+
     var ExpressionEvaluator evaluator;
     var Math math;
 
@@ -51,6 +58,8 @@ int Main::main()
 
         pfc.fstr("Ausdruck: $ = $\\n").sa(expressions[i]).sa(result).pr();
     }
+
+    var *PrintfClass pfcs[] = new PrintfClass[100];
 
    return 1;
 }
