@@ -1,5 +1,0 @@
-class SimpleStringTest
-{
-methods:
-    static void run(&int result);
-};
