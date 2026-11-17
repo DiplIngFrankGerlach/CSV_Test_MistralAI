@@ -1,0 +1,17 @@
+// Test adapters for a String_16 -> String_16 open addressing table.
+// The constant hash deliberately forces collisions.
+class StringKeyAdapter
+{
+methods:
+    int hash(&String_16 key);
+    int equals(&String_16 a, &String_16 b);
+    void copy(&String_16 dst, &String_16 src);
+    void destroy(&String_16 target);
+};
+
+class StringValueAdapter
+{
+methods:
+    void copy(&String_16 dst, &String_16 src);
+    void destroy(&String_16 target);
+};

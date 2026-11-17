@@ -1,0 +1,173 @@
+Import{
+    "Strings.ad",
+    "System.ad",
+    "StringHashtableAdapters.ad",
+    "MyHashtable.ad",
+    "StringHashtableTest.ad"
+}
+
+/** Record an assertion failure without terminating the remaining tests. */
+void StringHashtableTest::check(int condition, &int failures)
+{
+    if(condition==0)
+    {
+        failures=failures+1;
+        var PrintfClass output;
+        output.fstr("StringHashtableTest: assertion failed, total=$").sa(failures).pr();
+    }
+}
+
+/** Compare two integer results and record failures. */
+void StringHashtableTest::checkEqual(int actual, int expected, &int failures)
+{
+    if(actual!=expected)
+    {
+        failures=failures+1;
+        var PrintfClass output;
+        output.fstr("StringHashtableTest: got $, expected $").sa(actual).sa(expected).pr();
+    }
+}
+
+/**
+ * Exercise String_16 keys and String_16 values in an open-addressing table.
+ * Uses a constant-hash adapter to force collisions and probe-chain tests.
+ * result: 1 if all checks passed, otherwise 0.
+ */
+void StringHashtableTest::run(&int result)
+{
+    result=0;
+    var int failures=0;
+    var int status=0;
+    var MyHashtable ht;
+    var String_16 key;
+    var String_16 value;
+    var String_16 foundValue;
+
+    // Empty table, missing entry, and initial capacity.
+    this.checkEqual(ht.size(),0,failures);
+    this.checkEqual(ht.capacity(),16,failures);
+    key.assign("missing");
+    this.checkEqual(ht.contains(key),0,failures);
+    this.checkEqual(ht.get(key,foundValue),0,failures);
+    this.checkEqual(ht.remove(key),0,failures);
+
+    // New insert; source objects are changed afterwards.
+    key.assign("alpha");
+    value.assign("one");
+    status=ht.put(key,value);
+    this.checkEqual(status,1,failures);
+    key.assign("changed-key");
+    value.assign("changed-value");
+    key.assign("alpha");
+    this.checkEqual(ht.get(key,foundValue),1,failures);
+    this.check(foundValue.equals("one"),failures);
+    this.checkEqual(ht.size(),1,failures);
+
+    // Replace existing key without changing entry count.
+    value.assign("two");
+    status=ht.put(key,value);
+    this.checkEqual(status,2,failures);
+    this.checkEqual(ht.size(),1,failures);
+    this.checkEqual(ht.get(key,foundValue),1,failures);
+    this.check(foundValue.equals("two"),failures);
+
+    // Modifying the retrieved copy must not modify the table.
+    foundValue.assign("modified-output");
+    this.checkEqual(ht.get(key,foundValue),1,failures);
+    this.check(foundValue.equals("two"),failures);
+
+    // Force multiple resizes; all keys collide by adapter design.
+    for(var int i=0;i<80;i++)
+    {
+        key.assign("key-");
+        key.append(i);
+        value.assign("value-");
+        value.append(i);
+        status=ht.put(key,value);
+        this.checkEqual(status,1,failures);
+    }
+    this.checkEqual(ht.size(),81,failures);
+    if(ht.capacity()<=16)
+    {
+        failures=failures+1;
+    }
+
+    // Verify every key/value after rehashing.
+    for(var int j=0;j<80;j++)
+    {
+        key.assign("key-");
+        key.append(j);
+        value.assign("value-");
+        value.append(j);
+        this.checkEqual(ht.contains(key),1,failures);
+        status=ht.get(key,foundValue);
+        this.checkEqual(status,1,failures);
+        this.check(foundValue.equals(value),failures);
+    }
+
+    // Remove alternating entries, leaving tombstones.
+    for(var int k=0;k<80;k=k+2)
+    {
+        key.assign("key-");
+        key.append(k);
+        this.checkEqual(ht.remove(key),1,failures);
+        this.checkEqual(ht.remove(key),0,failures);
+    }
+    this.checkEqual(ht.size(),41,failures);
+
+    // Verify that tombstones did not break probe chains.
+    for(var int m=0;m<80;m++)
+    {
+        key.assign("key-");
+        key.append(m);
+        var int isPresent=ht.contains(key);
+        var int remainder=m % 2;
+        if(remainder==0)
+        {
+            this.checkEqual(isPresent,0,failures);
+        }
+        else
+        {
+            this.checkEqual(isPresent,1,failures);
+            value.assign("value-");
+            value.append(m);
+            this.checkEqual(ht.get(key,foundValue),1,failures);
+            this.check(foundValue.equals(value),failures);
+        }
+    }
+
+    // Reuse tombstones and verify the values again.
+    for(var int n=0;n<80;n=n+2)
+    {
+        key.assign("key-");
+        key.append(n);
+        value.assign("reinsert-");
+        value.append(n);
+        this.checkEqual(ht.put(key,value),1,failures);
+        this.checkEqual(ht.get(key,foundValue),1,failures);
+        this.check(foundValue.equals(value),failures);
+    }
+    this.checkEqual(ht.size(),81,failures);
+
+    // Clear, then reuse the same table.
+    ht.clear();
+    this.checkEqual(ht.size(),0,failures);
+    key.assign("alpha");
+    this.checkEqual(ht.contains(key),0,failures);
+    value.assign("after-clear");
+    this.checkEqual(ht.put(key,value),1,failures);
+    this.checkEqual(ht.get(key,foundValue),1,failures);
+    this.check(foundValue.equals(value),failures);
+    this.checkEqual(ht.size(),1,failures);
+
+    var PrintfClass output;
+    if(failures==0)
+    {
+        result=1;
+        output.fstr("StringHashtableTest: PASS").pr();
+    }
+    else
+    {
+        output.fstr("StringHashtableTest: FAIL ($ assertions)").sa(failures).pr();
+    }
+}
