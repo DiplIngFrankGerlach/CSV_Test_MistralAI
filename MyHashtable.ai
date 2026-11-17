@@ -1,3 +1,9 @@
+Import{
+    "Strings.ad",
+    "StringHashtableAdapters.ad",
+    "MyHashtable.ad"
+}
+
 
 
 

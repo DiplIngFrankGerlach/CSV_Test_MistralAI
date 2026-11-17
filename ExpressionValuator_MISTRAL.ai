@@ -95,13 +95,14 @@ double ExpressionEvaluator::parseNumber()
         c = this.peekChar();
     }
 
-    numStr.asDouble();
-    return 0.0;
+    return numStr.asDouble();
+    
 }
 
 double ExpressionEvaluator::parseFunction()
 {
     var String_16 funcName;
+    var PrintfClass pfc;
     var char c = this.nextChar();
 
     while(this.isAlpha(c) == 1)
@@ -112,11 +113,21 @@ double ExpressionEvaluator::parseFunction()
 
     if(c != '(')
     {
+        pfc.fstr("'(' erwartet").pr(); 
         return 0.0;
     }
 
-    this.nextChar();
+    //this.nextChar();
     var double arg = this.parseExpression();
+
+
+    var double arg2 = -111111.0;
+    c = this.peekChar();
+    if(c == ',')
+    {
+       this.nextChar();
+       arg2 = this.parseExpression();
+    }
 
     c = this.peekChar();
     if(c == ')')
@@ -125,11 +136,15 @@ double ExpressionEvaluator::parseFunction()
     }
     else
     {
+        pfc.fstr("')' erwartet").pr(); 
         return 0.0;
     }
 
+    //pfc.fstr("arg:$ arg2:$").sa(arg).sa(arg2).pr();
+
     if(funcName.equals("sinus") == 1)
     {
+        
         return _math.sinus(arg);
     }
     else
@@ -142,11 +157,12 @@ double ExpressionEvaluator::parseFunction()
         {
             if(funcName.equals("sqrt") == 1)
             {
+                //pfc.fstr("sqrt arg:$").sa(arg).pr();
                 return _math.wurzel(arg);
             }
             else
             {
-                /*
+                
                 if(funcName.equals("log") == 1)
                 {
                     return _math.log(arg);
@@ -161,25 +177,19 @@ double ExpressionEvaluator::parseFunction()
                     {
                         if(funcName.equals("pow") == 1)
                         {
-                            c = this.peekChar();
-                            if(c == ',')
-                            {
-                                this.nextChar();
-                                var double exponent = this.parseExpression();
-                                return _math.pow(arg, exponent);
-                            }
-                            return _math.pow(arg, 2.0);
+                            return _math.pow(arg, arg2);
                         }
                         else
                         {
+                            pfc.fstr("Function $ not implemented or not recognized").sa(funcName).pr();
                             return 0.0;
                         }
                     }
                 }
-                */
             }
         }
     } 
+    pfc.fstr("FEHLER").sa(funcName).pr();
     return 0.0;
 }
 

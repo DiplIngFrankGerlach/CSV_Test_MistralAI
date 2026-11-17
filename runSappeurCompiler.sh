@@ -62,6 +62,12 @@ compile SimpleString.ai
 compile SimpleStringTest.ai
 
 compile Math.ai
+
+compile MyHashtable.ai
+
+compile StringHashtableAdapters.ai  
+
+compile StringHashtableTest.ai
 ###################################################################################################################
 # erzeuge die Stack Memory Bestimmung
 #####################################

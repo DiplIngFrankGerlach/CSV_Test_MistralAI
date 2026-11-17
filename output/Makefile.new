@@ -15,13 +15,17 @@ determStackMemory_AppMain.ai.o \
 determStackMemory_CSVLeser_MISTRAL.ai.o \
 determStackMemory_ExpressionValuator_MISTRAL.ai.o \
 determStackMemory_Math.ai.o \
+determStackMemory_MyHashtable.ai.o \
 determStackMemory_SimpleString.ai.o \
 determStackMemory_SimpleStringTest.ai.o \
+determStackMemory_StringHashtableAdapters.ai.o \
+determStackMemory_StringHashtableTest.ai.o \
 determStackMemory_Strings.ai.o \
 determStackMemory_System.ai.o \
 determStackMemory_ZKNuetzlich.ai.o \
 ExpressionValuator_MISTRAL.o \
 Math.o \
+MyHashtable.o \
 placementNewClass_AlphabeticSorter.o \
 placementNewClass_AlphaEntry.o \
 placementNewClass_Assigner_String_128.o \
@@ -45,6 +49,7 @@ placementNewClass_MTSuperClass.o \
 placementNewClass_MultiThreadAdmin.o \
 placementNewClass_Mutex.o \
 placementNewClass_MutexInfo.o \
+placementNewClass_MyHashtable.o \
 placementNewClass_NullPtrClassSappeurInternal.o \
 placementNewClass_PrintfClass.o \
 placementNewClass_Semaphore.o \
@@ -54,6 +59,9 @@ placementNewClass_SimpleStringTest.o \
 placementNewClass_SPRFile.o \
 placementNewClass_String_128.o \
 placementNewClass_String_16.o \
+placementNewClass_StringHashtableTest.o \
+placementNewClass_StringKeyAdapter.o \
+placementNewClass_StringValueAdapter.o \
 placementNewClass_SystemConstants.o \
 placementNewClass_SystemControl.o \
 placementNewClass_SystemTime.o \
@@ -65,6 +73,8 @@ placementNewClass_Umgebung.o \
 placementNewClass_ZKNuetzlich.o \
 SimpleString.o \
 SimpleStringTest.o \
+StringHashtableAdapters.o \
+StringHashtableTest.o \
 Strings.o \
 System.o \
 ZKNuetzlich.o \
@@ -90,7 +100,7 @@ MISC_OPT=-DSPR_USE_PTHREAD_MUTEX_LOCKS=1 -DLINUX_SAPPEUR=1 -DSPR_DEBUG=1 -DSPR_P
 
 
 all:$(OBJECTS)
-	$(CC) $(OPT) $(MISC_OPT) -o MatheLern $^ $(LDLIBS)
+	$(CC) $(OPT) $(MISC_OPT) -o AITest $^ $(LDLIBS)
 	
 clean:
-	rm *.o MatheLern
+	rm *.o AITest
