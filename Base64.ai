@@ -1,0 +1,340 @@
+Import { "Base64.ad" }
+
+/**
+ * @brief Convert one six-bit value to a standard Base64 ASCII character.
+ * @param digit Value in [0,63].
+ * @return Encoded ASCII character, or '?' for values outside [0,63].
+ */
+char Base64::encodeDigit(int digit)
+{
+    switch(digit)
+    {
+        case 0: { return 'A'; };
+        case 1: { return 'B'; };
+        case 2: { return 'C'; };
+        case 3: { return 'D'; };
+        case 4: { return 'E'; };
+        case 5: { return 'F'; };
+        case 6: { return 'G'; };
+        case 7: { return 'H'; };
+        case 8: { return 'I'; };
+        case 9: { return 'J'; };
+        case 10: { return 'K'; };
+        case 11: { return 'L'; };
+        case 12: { return 'M'; };
+        case 13: { return 'N'; };
+        case 14: { return 'O'; };
+        case 15: { return 'P'; };
+        case 16: { return 'Q'; };
+        case 17: { return 'R'; };
+        case 18: { return 'S'; };
+        case 19: { return 'T'; };
+        case 20: { return 'U'; };
+        case 21: { return 'V'; };
+        case 22: { return 'W'; };
+        case 23: { return 'X'; };
+        case 24: { return 'Y'; };
+        case 25: { return 'Z'; };
+        case 26: { return 'a'; };
+        case 27: { return 'b'; };
+        case 28: { return 'c'; };
+        case 29: { return 'd'; };
+        case 30: { return 'e'; };
+        case 31: { return 'f'; };
+        case 32: { return 'g'; };
+        case 33: { return 'h'; };
+        case 34: { return 'i'; };
+        case 35: { return 'j'; };
+        case 36: { return 'k'; };
+        case 37: { return 'l'; };
+        case 38: { return 'm'; };
+        case 39: { return 'n'; };
+        case 40: { return 'o'; };
+        case 41: { return 'p'; };
+        case 42: { return 'q'; };
+        case 43: { return 'r'; };
+        case 44: { return 's'; };
+        case 45: { return 't'; };
+        case 46: { return 'u'; };
+        case 47: { return 'v'; };
+        case 48: { return 'w'; };
+        case 49: { return 'x'; };
+        case 50: { return 'y'; };
+        case 51: { return 'z'; };
+        case 52: { return '0'; };
+        case 53: { return '1'; };
+        case 54: { return '2'; };
+        case 55: { return '3'; };
+        case 56: { return '4'; };
+        case 57: { return '5'; };
+        case 58: { return '6'; };
+        case 59: { return '7'; };
+        case 60: { return '8'; };
+        case 61: { return '9'; };
+        case 62: { return '+'; };
+        case 63: { return '/'; };
+        default: { return '?'; };
+    }
+    return '?';
+}
+
+/**
+ * @brief Decode one standard Base64 ASCII character.
+ * @param digit The ASCII character to decode.
+ * @return 0..63 for an alphabet character, -1 for invalid characters.
+ *         '=' is deliberately not considered an alphabet character.
+ */
+int Base64::decodeDigit(char digit)
+{
+    switch(digit)
+    {
+        case 'A': { return 0; };
+        case 'B': { return 1; };
+        case 'C': { return 2; };
+        case 'D': { return 3; };
+        case 'E': { return 4; };
+        case 'F': { return 5; };
+        case 'G': { return 6; };
+        case 'H': { return 7; };
+        case 'I': { return 8; };
+        case 'J': { return 9; };
+        case 'K': { return 10; };
+        case 'L': { return 11; };
+        case 'M': { return 12; };
+        case 'N': { return 13; };
+        case 'O': { return 14; };
+        case 'P': { return 15; };
+        case 'Q': { return 16; };
+        case 'R': { return 17; };
+        case 'S': { return 18; };
+        case 'T': { return 19; };
+        case 'U': { return 20; };
+        case 'V': { return 21; };
+        case 'W': { return 22; };
+        case 'X': { return 23; };
+        case 'Y': { return 24; };
+        case 'Z': { return 25; };
+        case 'a': { return 26; };
+        case 'b': { return 27; };
+        case 'c': { return 28; };
+        case 'd': { return 29; };
+        case 'e': { return 30; };
+        case 'f': { return 31; };
+        case 'g': { return 32; };
+        case 'h': { return 33; };
+        case 'i': { return 34; };
+        case 'j': { return 35; };
+        case 'k': { return 36; };
+        case 'l': { return 37; };
+        case 'm': { return 38; };
+        case 'n': { return 39; };
+        case 'o': { return 40; };
+        case 'p': { return 41; };
+        case 'q': { return 42; };
+        case 'r': { return 43; };
+        case 's': { return 44; };
+        case 't': { return 45; };
+        case 'u': { return 46; };
+        case 'v': { return 47; };
+        case 'w': { return 48; };
+        case 'x': { return 49; };
+        case 'y': { return 50; };
+        case 'z': { return 51; };
+        case '0': { return 52; };
+        case '1': { return 53; };
+        case '2': { return 54; };
+        case '3': { return 55; };
+        case '4': { return 56; };
+        case '5': { return 57; };
+        case '6': { return 58; };
+        case '7': { return 59; };
+        case '8': { return 60; };
+        case '9': { return 61; };
+        case '+': { return 62; };
+        case '/': { return 63; };
+        default: { return -1; };
+    }
+    return -1;
+}
+
+/**
+ * @brief Encode a complete binary array using standard padded Base64.
+ * @param source Input octets, including arbitrary binary values.
+ * @param destination Receives a newly allocated array, without terminator.
+ * @param resultLength Number of ASCII output bytes.
+ * @return 1 on success, 0 if the output size exceeds signed int limits.
+ * @note Input/output must be distinct arrays. Source must be non-NULL.
+ */
+int Base64::encode(&*char source[], &*char destination[], &int resultLength)
+{
+    resultLength=0;
+    var int n=source.sz;
+    // ceil(n/3)*4 must fit into a signed 32-bit int.
+    if(n > 1610612733)
+    {
+        return 0;
+    }
+    var int q=n/3;
+    var int rem=n%3;
+    var int groups=q;
+    if(rem != 0)
+    {
+        groups=groups+1;
+    }
+    var int outSize=groups*4;
+    var *char temporary[]=new char[outSize];
+    var int i=0;
+    var int j=0;
+    var int fullBytes=q*3;
+    while(i < fullBytes)
+    {
+        var int a=cast(int,source[i]);
+        var int b=cast(int,source[i + 1]);
+        var int c=cast(int,source[i + 2]);
+        if(a < 0) { a=a+256; }
+        if(b < 0) { b=b+256; }
+        if(c < 0) { c=c+256; }
+        var int packed=(a*65536)+(b*256)+c;
+        var int d0=(packed >> 18) & 63;
+        var int d1=(packed >> 12) & 63;
+        var int d2=(packed >> 6) & 63;
+        var int d3=packed & 63;
+        temporary[j]=this.encodeDigit(d0);
+        temporary[j + 1]=this.encodeDigit(d1);
+        temporary[j + 2]=this.encodeDigit(d2);
+        temporary[j + 3]=this.encodeDigit(d3);
+        i=i+3;
+        j=j+4;
+    }
+    if(rem != 0)
+    {
+        var int lastA=cast(int,source[i]);
+        if(lastA < 0) { lastA=lastA+256; }
+        var int lastB=0;
+        if(rem == 2)
+        {
+            lastB=cast(int,source[i + 1]);
+            if(lastB < 0) { lastB=lastB+256; }
+        }
+        var int triple=(lastA*65536)+(lastB*256);
+        var int e0=(triple >> 18) & 63;
+        var int e1=(triple >> 12) & 63;
+        temporary[j]=this.encodeDigit(e0);
+        temporary[j + 1]=this.encodeDigit(e1);
+        if(rem == 2)
+        {
+            var int e2=(triple >> 6) & 63;
+            temporary[j + 2]=this.encodeDigit(e2);
+        }
+        else
+        {
+            temporary[j + 2]='=';
+        }
+        temporary[j + 3]='=';
+    }
+    destination=temporary;
+    resultLength=outSize;
+    return 1;
+}
+
+/**
+ * @brief Decode strict, padded RFC 4648 Base64 into binary bytes.
+ * @details Rejects whitespace, non-alphabet characters, misplaced '=' and
+ *          nonzero unused bits in the final quantum. Performs full validation
+ *          before allocating output. No partial output is published on error.
+ * @param source Input ASCII array, without any required terminator.
+ * @param destination Receives a newly allocated exact-size byte array.
+ * @param resultLength Number of decoded bytes.
+ * @return 1 on success; 0 on malformed input.
+ * @note Input/output must be distinct arrays. Source must be non-NULL.
+ */
+int Base64::decode(&*char source[], &*char destination[], &int resultLength)
+{
+    resultLength=0;
+    var int n=source.sz;
+    var int rest=n%4;
+    if(rest != 0)
+    {
+        return 0;
+    }
+    var int groupCount=n/4;
+    var int padding=0;
+    // Validation pass: every quantum is checked before allocation.
+    for(var int g=0;g<groupCount;g++)
+    {
+        var int k=g*4;
+        var int x0=this.decodeDigit(source[k]);
+        var int x1=this.decodeDigit(source[k + 1]);
+        if( (x0 < 0) || (x1 < 0) )
+        {
+            return 0;
+        }
+        var char ch2=source[k + 2];
+        var char ch3=source[k + 3];
+        if(ch2 == '=')
+        {
+            var int finalGroup=groupCount - 1;
+            if(g != finalGroup) { return 0; }
+            if(ch3 != '=') { return 0; }
+            var int unused=x1 & 15;
+            if(unused != 0) { return 0; }
+            padding=2;
+        }
+        else
+        {
+            var int x2=this.decodeDigit(ch2);
+            if(x2 < 0) { return 0; }
+            if(ch3 == '=')
+            {
+                var int finalGroup2=groupCount - 1;
+                if(g != finalGroup2) { return 0; }
+                var int unused2=x2 & 3;
+                if(unused2 != 0) { return 0; }
+                padding=1;
+            }
+            else
+            {
+                var int x3=this.decodeDigit(ch3);
+                if(x3 < 0) { return 0; }
+            }
+        }
+    }
+    var int outputCount=groupCount*3 - padding;
+    var *char temporary[]=new char[outputCount];
+    var int j=0;
+    for(var int g2=0;g2<groupCount;g2++)
+    {
+        var int pos=g2*4;
+        var int v0=this.decodeDigit(source[pos]);
+        var int v1=this.decodeDigit(source[pos + 1]);
+        var int v2=0;
+        var int v3=0;
+        if(source[pos + 2] != '=')
+        {
+            v2=this.decodeDigit(source[pos + 2]);
+        }
+        if(source[pos + 3] != '=')
+        {
+            v3=this.decodeDigit(source[pos + 3]);
+        }
+        var int bits=(v0 << 18) | (v1 << 12) | (v2 << 6) | v3;
+        var int byte0=(bits >> 16) & 255;
+        temporary[j]=cast(char,byte0);
+        j=j+1;
+        if(j < outputCount)
+        {
+            var int byte1=(bits >> 8) & 255;
+            temporary[j]=cast(char,byte1);
+            j=j+1;
+        }
+        if(j < outputCount)
+        {
+            var int byte2=bits & 255;
+            temporary[j]=cast(char,byte2);
+            j=j+1;
+        }
+    }
+    destination=temporary;
+    resultLength=outputCount;
+    return 1;
+}

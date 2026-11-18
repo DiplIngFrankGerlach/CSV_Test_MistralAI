@@ -1,0 +1,6 @@
+class Base64Test
+{
+methods:
+    void run(&int result);
+    int equalArrays(&*char left[], &*char right[]);
+};
