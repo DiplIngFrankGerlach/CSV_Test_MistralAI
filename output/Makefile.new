@@ -9,9 +9,13 @@ main.o \
 ProjektCPP.o \
 mapping.o \
 AppMain.o \
+Base64.o \
+Base64Test.o \
 CSVLeser_MISTRAL.o \
 determineStackMemoryNeeds.o \
 determStackMemory_AppMain.ai.o \
+determStackMemory_Base64.ai.o \
+determStackMemory_Base64Test.ai.o \
 determStackMemory_CSVLeser_MISTRAL.ai.o \
 determStackMemory_ExpressionValuator_MISTRAL.ai.o \
 determStackMemory_Math.ai.o \
@@ -30,6 +34,8 @@ placementNewClass_AlphabeticSorter.o \
 placementNewClass_AlphaEntry.o \
 placementNewClass_Assigner_String_128.o \
 placementNewClass_Assigner_String_16.o \
+placementNewClass_Base64.o \
+placementNewClass_Base64Test.o \
 placementNewClass_Benutzer_Umschalter.o \
 placementNewClass_CommandlineArgs.o \
 placementNewClass_Compare_String_128.o \

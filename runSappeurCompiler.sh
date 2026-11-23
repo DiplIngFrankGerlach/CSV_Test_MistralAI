@@ -68,6 +68,10 @@ compile MyHashtable.ai
 compile StringHashtableAdapters.ai  
 
 compile StringHashtableTest.ai
+
+compile Base64.ai  
+
+compile Base64Test.ai
 ###################################################################################################################
 # erzeuge die Stack Memory Bestimmung
 #####################################
