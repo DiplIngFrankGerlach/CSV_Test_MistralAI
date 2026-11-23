@@ -6,7 +6,8 @@ Import{
 /** Return a deliberately constant hash to stress-test linear probing. */
 int StringKeyAdapter::hash(&String_16 key)
 {
-    return 7;
+    //return 7;
+    return key.hashCode();
 }
 
 /** Compare two String_16 keys for equality. */

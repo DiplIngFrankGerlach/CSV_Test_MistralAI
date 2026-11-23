@@ -5,6 +5,8 @@ Import
   "SimpleString.ad",
   "SimpleStringTest.ad",
   "StringHashtableAdapters.ad",
+  "Base64.ad", 
+  "Base64Test.ad",
   "MyHashtable.ad",
   "StringHashtableTest.ad",
   "Math.ad",
@@ -30,6 +32,8 @@ int Main::main()
    // Gib das Ergebnis aus
    pfc.fstr("Durchschnittswert der 2. Spalte: $").sa(average).pr();
    */
+    var int x;
+    var int y = x * -1;
 
     var PrintfClass pfc;
     var int ut_result;
@@ -41,6 +45,11 @@ int Main::main()
     sthtt.run(ut_result);
     if(ut_result == 1) { pfc.fstr("StringHashtableTest::run() ERFOLG !").pr(); }
     else { pfc.fstr("StringHashtableTest::run() Fehler Nr $ !").sa(ut_result).pr(); }
+
+    var Base64Test b64test;
+    b64test.run(ut_result);
+    if(ut_result == 1) { pfc.fstr("Base64Test::run() ERFOLG !").pr(); }
+    else { pfc.fstr("Base64Test::run() Fehler Nr $ !").sa(ut_result).pr(); }
 
 
     var ExpressionEvaluator evaluator;
