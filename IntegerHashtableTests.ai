@@ -1,0 +1,38 @@
+Import{
+    "Strings.ad",
+    "System.ad",
+    "IntegerHashtableAdapters.ad",
+    "IntegerHashtables.ad",
+    "IntIntHashtableTest.ad",
+    "LonglongHashtableTest.ad",
+    "IntegerHashtableTests.ad"
+}
+
+/**
+ * @brief Run the int/int and longlong/longlong hash table test suites.
+ * Both suites run even if the first reports a failure.
+ * @param result Set to 1 only if both suites pass; otherwise set to 0.
+ */
+void IntegerHashtableTests::run(&int result)
+{
+    result=0;
+    var IntIntHashtableTest intTest;
+    var LonglongHashtableTest longlongTest;
+    var int intResult=0;
+    var int longlongResult=0;
+
+    intTest.run(intResult);
+    longlongTest.run(longlongResult);
+
+    var int passed=intResult+longlongResult;
+    var PrintfClass output;
+    if(passed==2)
+    {
+        result=1;
+        output.fstr("IntegerHashtableTests: PASS (2/2 suites)").pr();
+    }
+    else
+    {
+        output.fstr("IntegerHashtableTests: FAIL ($/2 suites passed)").sa(passed).pr();
+    }
+}

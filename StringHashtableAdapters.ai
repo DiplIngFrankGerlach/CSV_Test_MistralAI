@@ -1,0 +1,45 @@
+Import{
+    "Strings.ad",
+    "StringHashtableAdapters.ad"
+}
+
+/** Return a deliberately constant hash to stress-test linear probing. */
+int StringKeyAdapter::hash(&String_16 key)
+{
+    //return 7;
+    return key.hashCode();
+}
+
+/** Compare two String_16 keys for equality. */
+int StringKeyAdapter::equals(&String_16 a, &String_16 b)
+{
+    if(a.equals(b)==1)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+/** Copy a key's logical contents into an existing value object. */
+void StringKeyAdapter::copy(&String_16 dst, &String_16 src)
+{
+    dst.assign(src);
+}
+
+/** Clear a key while keeping its by-value array slot valid. */
+void StringKeyAdapter::destroy(&String_16 target)
+{
+    target.assign("");
+}
+
+/** Copy a value's logical contents into an existing value object. */
+void StringValueAdapter::copy(&String_16 dst, &String_16 src)
+{
+    dst.assign(src);
+}
+
+/** Clear a value while keeping its by-value array slot valid. */
+void StringValueAdapter::destroy(&String_16 target)
+{
+    target.assign("");
+}

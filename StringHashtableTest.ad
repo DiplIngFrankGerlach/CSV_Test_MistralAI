@@ -1,0 +1,8 @@
+class StringHashtableTest
+{
+methods:
+    // result = 1 on success, 0 if any assertion failed.
+    void run(&int result);
+    void check(int condition, &int failures);
+    void checkEqual(int actual, int expected, &int failures);
+};

@@ -84,6 +84,32 @@ Rule 14: When you need a negative constant, put the minus directly
          in front of the constant.
          Example:
            var int y = x * -1;
+
+Rule 15: Arrays on the stack are similar to C arrays, except that the size
+         must be always specified by means of a constant literal integer.
+         Example:
+           var int primes[1000];
+
+Rule 16: Arrays on the heap can have variable size.
+         Example:
+           A) declare a pointer to an array of Animal objects
+           var *Animal zoo[] = new Animal[1000];
+
+           B) declare a pointer to an array of pointers to Animal objects
+           var *Animal* zoo[] = new Animal*[1000];
+
+Rule 17: All Pointers are automatically reference-counted smart pointers.
+         The programmer must only make sure there are no garbage cycles,
+         the rest will be handled by the generated code and the runtime
+         system. This includes multithreaded code.
+
+Rule 18: All objects reachable from mulitple threads must use be of a
+         type created with "multithreaded" class attribute. This will
+         make all methods reachable from more than one thread threadsafe.
+
+
+
+
  
 
 

@@ -1,8 +1,8 @@
 
 
 CC = gcc
-HOMEDIR=/Users/fg
-SPRDIR=${HOMEDIR}/Sappeur4x/ausg/haupt/
+HOMEDIR=/home/frank
+SPRDIR=${HOMEDIR}/Sappeur_4.18
 VPATH=${SPRDIR}/cppMapping:../
 
 INCLUDE= -I${SPRDIR}/cppMapping -I. -I..  -I/usr/include
@@ -20,7 +20,7 @@ MISC_OPT=-DSPR_USE_PTHREAD_MUTEX_LOCKS=1 -DLINUX_SAPPEUR=1 -DSPR_DEBUG=1 -DSPR_P
 
 
 all:$(OBJECTS)
-	$(CC) $(OPT) $(MISC_OPT) -o MatheLern $^ $(LDLIBS)
+	$(CC) $(OPT) $(MISC_OPT) -o AITest $^ $(LDLIBS)
 	
 clean:
-	rm *.o MatheLern
+	rm *.o AITest

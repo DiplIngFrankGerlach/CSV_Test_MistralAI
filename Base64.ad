@@ -1,0 +1,12 @@
+// RFC 4648 standard Base64, padded, strict decoder.
+// Binary buffers: char arrays may contain NUL and arbitrary octets.
+// Return 1 on success; return 0 on invalid input or unsupported size.
+// Output is replaced only upon success, and length is set to zero on failure.
+class Base64
+{
+methods:
+    int encode(&*char source[], &*char destination[], &int resultLength);
+    int decode(&*char source[], &*char destination[], &int resultLength);
+    char encodeDigit(int digit);
+    int decodeDigit(char digit);
+};

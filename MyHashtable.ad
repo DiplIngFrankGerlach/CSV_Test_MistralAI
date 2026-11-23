@@ -1,0 +1,28 @@
+
+
+
+
+class MyHashtable
+{
+    *String_16 _keys[];
+    *String_16 _values[];
+    *int _states[];   // 0 empty, 1 occupied, 2 tombstone
+    int _capacity;
+    int _size;
+    int _used;       // occupied + tombstones
+    StringKeyAdapter _keyAdapter;
+    StringValueAdapter _valueAdapter;
+methods:
+    MyHashtable();
+    ~MyHashtable();
+    int put(&String_16 key, &String_16 value);  // 1 inserted, 2 updated, 0 failure
+    int get(&String_16 key, &String_16 value);  // copies the value; 1 found, 0 absent
+    int contains(&String_16 key);       // 1 found, 0 absent
+    int remove(&String_16 key);         // 1 removed, 0 absent
+    void clear();
+    int size();
+    int capacity();
+    int findSlot(&String_16 key, &int found);
+    int grow(int newCapacity);
+};
+

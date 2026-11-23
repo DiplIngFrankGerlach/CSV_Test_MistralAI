@@ -15,7 +15,7 @@
 ###################################################################################################################
 # Setze das Sappeur Verzeichnis
 ###############################
-export SPR_VERZ=~/Sappeur4x/ausg/haupt
+export SPR_VERZ=~/Sappeur4.17
 
 
 
@@ -57,11 +57,35 @@ compile CSVLeser_MISTRAL.ai
 
 compile ExpressionValuator_MISTRAL.ai
 
+compile SimpleString.ai
+
+compile SimpleStringTest.ai
+
 compile Math.ai
 
 compile HTTPScanner.ai
 
 compile ScannerUnitTest.ai
+
+compile MyHashtable.ai
+
+compile StringHashtableAdapters.ai  
+
+compile StringHashtableTest.ai
+
+compile Base64.ai  
+
+compile Base64Test.ai
+
+compile IntegerHashtableImpls.ai
+
+compile IntIntHashtableTest.ai
+compile IntegerHashtableAdapters.ai
+compile IntegerHashtableImpls.ai
+compile IntegerHashtableTests.ai
+compile LonglongHashtableTest.ai
+
+
 ###################################################################################################################
 # erzeuge die Stack Memory Bestimmung
 #####################################

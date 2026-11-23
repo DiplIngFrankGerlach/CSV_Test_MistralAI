@@ -44,6 +44,8 @@ class Math
 
   double aHochB(double a, double b);
 
+  double pow(double a, double b);
+
   double euler(double x);
 
   double wurzel(double x);
@@ -63,5 +65,10 @@ class Math
 
   void pow(&Complex x,int y,&Complex ergebnis);
 
+
   double fabs(double x);
+
+  double log(double x);
+
+  double abs(double x);
 };

@@ -91,6 +91,11 @@ double Math::aHochB(double a, double b)
    return y;
 }
 
+double Math::pow(double a, double b)
+{
+   return this.aHochB(a,b);
+}
+
 double Math::euler(double x)
 {
    var double y;
@@ -98,6 +103,12 @@ double Math::euler(double x)
        y = exp(x);
    ]]
    return y;
+}
+
+double Math::abs(double x)
+{
+   if( x > 0.0){ return x; }
+   return x * -1.0;
 }
 
 double Math::pi()
@@ -108,6 +119,15 @@ double Math::pi()
 double Math::e()
 {
    return 2.71828182845904523536028747135266249;
+}
+
+double Math::log(double x)
+{
+   var double y;
+   inline_cpp[[
+       y = ::log(x);
+   ]]
+   return y;
 }
 
 

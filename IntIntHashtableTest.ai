@@ -1,0 +1,337 @@
+Import{
+    "Strings.ad",
+    "System.ad",
+    "IntegerHashtableAdapters.ad",
+    "IntegerHashtables.ad",
+    "IntIntHashtableTest.ad"
+}
+
+/** @brief Record an integer assertion failure and identify its test case. */
+void IntIntHashtableTest::checkEqual(int actual, int expected,
+                                   int caseId, &int failures)
+{
+    if(actual!=expected)
+    {
+        failures=failures+1;
+        var PrintfClass output;
+        output.fstr("IntIntHashtableTest case $: got $, expected $")
+              .sa(caseId).sa(actual).sa(expected).pr();
+    }
+}
+
+/** @brief Check that a key is found with the expected complete int value. */
+void IntIntHashtableTest::checkEntry(&IntIntHashtable table, int key,
+                                   int expected, int caseId, &int failures)
+{
+    var int value=777;
+    var int status=table.get(key,value);
+    this.checkEqual(status,1,caseId,failures);
+    if(status==1)
+    {
+        this.checkEqual(value,expected,caseId,failures);
+    }
+}
+
+/**
+ * @brief Cases 100-199: empty lookups, copies, updates, zero, and negatives.
+ * A missing lookup must leave its output argument unchanged.
+ */
+void IntIntHashtableTest::testBasics(&int failures)
+{
+    var IntIntHashtable table;
+    var int key=42;
+    var int value=123;
+    var int output=606;
+    var int status=0;
+
+    this.checkEqual(table.size(),0,100,failures);
+    this.checkEqual(table.capacity(),16,101,failures);
+    this.checkEqual(table.contains(key),0,102,failures);
+    status=table.get(key,output);
+    this.checkEqual(status,0,103,failures);
+    this.checkEqual(output,606,104,failures);
+    this.checkEqual(table.remove(key),0,105,failures);
+    this.checkEqual(table.size(),0,106,failures);
+
+    this.checkEqual(table.put(key,value),1,110,failures);
+    this.checkEqual(key,42,111,failures);
+    this.checkEqual(value,123,112,failures);
+    this.checkEqual(table.size(),1,113,failures);
+    key=84;
+    value=999;
+    this.checkEntry(table,42,123,114,failures);
+    this.checkEqual(table.contains(key),0,115,failures);
+
+    // An equal key in a different variable must replace the existing entry.
+    var int equalKey=42;
+    value=321;
+    this.checkEqual(table.put(equalKey,value),2,120,failures);
+    this.checkEqual(table.size(),1,121,failures);
+    this.checkEntry(table,42,321,122,failures);
+
+    status=table.get(equalKey,output);
+    this.checkEqual(status,1,123,failures);
+    output=-999;
+    this.checkEntry(table,42,321,124,failures);
+
+    key=0;
+    value=0;
+    this.checkEqual(table.put(key,value),1,130,failures);
+    this.checkEqual(table.contains(key),1,131,failures);
+    this.checkEntry(table,0,0,132,failures);
+    key=-5;
+    value=-55;
+    this.checkEqual(table.put(key,value),1,133,failures);
+    this.checkEntry(table,-5,-55,134,failures);
+    this.checkEqual(table.size(),3,135,failures);
+
+    key=77;
+    output=-707;
+    this.checkEqual(table.get(key,output),0,140,failures);
+    this.checkEqual(output,-707,141,failures);
+    this.checkEqual(table.remove(key),0,142,failures);
+    this.checkEqual(table.size(),3,143,failures);
+    key=-5;
+    this.checkEqual(table.remove(key),1,144,failures);
+    this.checkEqual(table.remove(key),0,145,failures);
+    this.checkEqual(table.contains(key),0,146,failures);
+    this.checkEqual(table.size(),2,147,failures);
+    this.checkEntry(table,0,0,148,failures);
+}
+
+/**
+ * @brief Cases 200-299: preserve the minimum and maximum signed int values.
+ * Construct the minimum without an out-of-range positive literal.
+ */
+void IntIntHashtableTest::testLimits(&int failures)
+{
+    var IntIntHashtable table;
+    var int minimum=-2147483647;
+    minimum=minimum - 1;
+    var int maximum=2147483647;
+    var int nearMinimum=minimum+1;
+    var int nearMaximum=maximum - 1;
+    var int zero=0;
+    var int negative=-1;
+
+    this.checkEqual(table.put(minimum,maximum),1,200,failures);
+    this.checkEqual(table.put(maximum,minimum),1,201,failures);
+    this.checkEqual(table.put(nearMinimum,nearMaximum),1,202,failures);
+    this.checkEqual(table.put(nearMaximum,nearMinimum),1,203,failures);
+    this.checkEqual(table.put(zero,minimum),1,204,failures);
+    this.checkEqual(table.put(negative,maximum),1,205,failures);
+    this.checkEqual(table.size(),6,206,failures);
+    this.checkEntry(table,minimum,maximum,210,failures);
+    this.checkEntry(table,maximum,minimum,211,failures);
+    this.checkEntry(table,nearMinimum,nearMaximum,212,failures);
+    this.checkEntry(table,nearMaximum,nearMinimum,213,failures);
+    this.checkEntry(table,zero,minimum,214,failures);
+    this.checkEntry(table,negative,maximum,215,failures);
+
+    this.checkEqual(table.put(minimum,minimum),2,220,failures);
+    this.checkEqual(table.size(),6,221,failures);
+    this.checkEntry(table,minimum,minimum,222,failures);
+    this.checkEqual(table.remove(minimum),1,223,failures);
+    this.checkEqual(table.contains(minimum),0,224,failures);
+    this.checkEntry(table,maximum,minimum,225,failures);
+    this.checkEqual(table.put(minimum,maximum),1,226,failures);
+    this.checkEntry(table,minimum,maximum,227,failures);
+    this.checkEqual(table.size(),6,228,failures);
+}
+
+/**
+ * @brief Cases 300-399: collision wraparound, tombstones, and replacement.
+ * Identity hashes 15,31,47,63 all start at slot 15 in a 16-slot table.
+ */
+void IntIntHashtableTest::testCollisions(&int failures)
+{
+    var IntIntHashtable table;
+    var int key=0;
+    var int value=0;
+    for(var int i=0;i<4;i++)
+    {
+        key=15+(i*16);
+        value=100+i;
+        this.checkEqual(table.put(key,value),1,300,failures);
+    }
+    this.checkEqual(table.size(),4,301,failures);
+    this.checkEqual(table.capacity(),16,302,failures);
+    this.checkEntry(table,15,100,303,failures);
+    this.checkEntry(table,31,101,304,failures);
+    this.checkEntry(table,47,102,305,failures);
+    this.checkEntry(table,63,103,306,failures);
+
+    // Delete the first and a middle member of the wrapped probe chain.
+    key=15;
+    this.checkEqual(table.remove(key),1,310,failures);
+    key=47;
+    this.checkEqual(table.remove(key),1,311,failures);
+    this.checkEqual(table.remove(key),0,312,failures);
+    this.checkEntry(table,31,101,313,failures);
+    this.checkEntry(table,63,103,314,failures);
+    this.checkEqual(table.size(),2,315,failures);
+
+    // An existing key beyond a tombstone must be updated, not duplicated.
+    key=63;
+    value=6300;
+    this.checkEqual(table.put(key,value),2,320,failures);
+    this.checkEqual(table.size(),2,321,failures);
+    this.checkEntry(table,63,6300,322,failures);
+
+    // This new colliding key can reuse the first tombstone.
+    key=79;
+    value=7900;
+    this.checkEqual(table.put(key,value),1,330,failures);
+    this.checkEqual(table.size(),3,331,failures);
+    this.checkEntry(table,79,7900,332,failures);
+    this.checkEntry(table,31,101,333,failures);
+    this.checkEntry(table,63,6300,334,failures);
+    key=47;
+    value=-4700;
+    this.checkEqual(table.put(key,value),1,335,failures);
+    this.checkEntry(table,47,-4700,336,failures);
+    this.checkEqual(table.size(),4,337,failures);
+    this.checkEqual(table.capacity(),16,338,failures);
+
+    key=15;
+    value=1515;
+    this.checkEqual(table.get(key,value),0,340,failures);
+    this.checkEqual(value,1515,341,failures);
+    key=95;
+    this.checkEqual(table.contains(key),0,342,failures);
+    this.checkEqual(table.remove(key),0,343,failures);
+    this.checkEqual(table.size(),4,344,failures);
+}
+
+/**
+ * @brief Cases 400-499 and 1000-7127: growth, deletion, reinsertion, and clear.
+ * A total of 128 entries forces multiple doublings from the initial 16 slots.
+ */
+void IntIntHashtableTest::testGrowth(&int failures)
+{
+    var IntIntHashtable table;
+    var int key=0;
+    var int value=0;
+    var int expected=0;
+    var int caseId=0;
+    var int remainder=0;
+
+    for(var int i=0;i<128;i++)
+    {
+        key=i - 64;
+        value=(i*17) - 1000;
+        caseId=1000+i;
+        this.checkEqual(table.put(key,value),1,caseId,failures);
+    }
+    this.checkEqual(table.size(),128,400,failures);
+    var int grownCapacity=table.capacity();
+    this.checkEqual(grownCapacity,256,401,failures);
+
+    for(var int j=0;j<128;j++)
+    {
+        key=j - 64;
+        expected=(j*17) - 1000;
+        caseId=2000+j;
+        this.checkEqual(table.contains(key),1,caseId,failures);
+        this.checkEntry(table,key,expected,caseId,failures);
+    }
+
+    for(var int k=0;k<128;k=k+2)
+    {
+        key=k - 64;
+        caseId=3000+k;
+        this.checkEqual(table.remove(key),1,caseId,failures);
+        this.checkEqual(table.remove(key),0,caseId,failures);
+    }
+    this.checkEqual(table.size(),64,410,failures);
+
+    for(var int m=0;m<128;m++)
+    {
+        key=m - 64;
+        remainder=m % 2;
+        caseId=4000+m;
+        if(remainder==0)
+        {
+            value=707;
+            this.checkEqual(table.contains(key),0,caseId,failures);
+            this.checkEqual(table.get(key,value),0,caseId,failures);
+            this.checkEqual(value,707,caseId,failures);
+        }
+        else
+        {
+            expected=(m*17) - 1000;
+            this.checkEntry(table,key,expected,caseId,failures);
+        }
+    }
+
+    for(var int n=0;n<128;n=n+2)
+    {
+        key=n - 64;
+        value=-2000 - n;
+        caseId=5000+n;
+        this.checkEqual(table.put(key,value),1,caseId,failures);
+    }
+    this.checkEqual(table.size(),128,420,failures);
+
+    for(var int p=0;p<128;p++)
+    {
+        key=p - 64;
+        remainder=p % 2;
+        if(remainder==0)
+        {
+            expected=-2000 - p;
+        }
+        else
+        {
+            expected=(p*17) - 1000;
+        }
+        caseId=6000+p;
+        this.checkEntry(table,key,expected,caseId,failures);
+    }
+
+    table.clear();
+    this.checkEqual(table.size(),0,430,failures);
+    this.checkEqual(table.capacity(),grownCapacity,431,failures);
+    for(var int q=0;q<128;q++)
+    {
+        key=q - 64;
+        value=808;
+        caseId=7000+q;
+        this.checkEqual(table.contains(key),0,caseId,failures);
+        this.checkEqual(table.get(key,value),0,caseId,failures);
+        this.checkEqual(value,808,caseId,failures);
+    }
+    table.clear();
+    this.checkEqual(table.size(),0,432,failures);
+    key=0;
+    value=-42;
+    this.checkEqual(table.put(key,value),1,440,failures);
+    this.checkEntry(table,0,-42,441,failures);
+    this.checkEqual(table.size(),1,442,failures);
+}
+
+/**
+ * @brief Run all tests; set result to 1 on success and 0 on any failure.
+ * Failures include numeric case IDs to locate the corresponding assertion.
+ */
+void IntIntHashtableTest::run(&int result)
+{
+    result=0;
+    var int failures=0;
+    this.testBasics(failures);
+    this.testLimits(failures);
+    this.testCollisions(failures);
+    this.testGrowth(failures);
+
+    var PrintfClass output;
+    if(failures==0)
+    {
+        result=1;
+        output.fstr("IntIntHashtableTest: PASS").pr();
+    }
+    else
+    {
+        output.fstr("IntIntHashtableTest: FAIL ($ assertions)")
+              .sa(failures).pr();
+    }
+}

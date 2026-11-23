@@ -1,0 +1,437 @@
+Import{
+    "Strings.ad",
+    "System.ad",
+    "IntegerHashtableAdapters.ad",
+    "IntegerHashtables.ad",
+    "LonglongHashtableTest.ad"
+}
+
+/** @brief Record an integer-status or count mismatch using a numeric case ID. */
+void LonglongHashtableTest::checkInt(int actual, int expected, int caseId, &int failures)
+{
+    if(actual!=expected)
+    {
+        failures=failures+1;
+        var PrintfClass output;
+        output.fstr("LonglongHashtableTest: case $ failed, got $, expected $").sa(caseId).sa(actual).sa(expected).pr();
+    }
+}
+
+/** @brief Record a full-width value mismatch without a longlong print overload. */
+void LonglongHashtableTest::checkLonglong(longlong actual, longlong expected, int caseId, &int failures)
+{
+    if(actual!=expected)
+    {
+        failures=failures+1;
+        var PrintfClass output;
+        output.fstr("LonglongHashtableTest: case $ failed (longlong mismatch)").sa(caseId).pr();
+    }
+}
+
+/**
+ * @brief Construct signed 64-bit extrema with representable intermediates.
+ * No integer literal exceeds the signed int range.
+ */
+void LonglongHashtableTest::getLimits(&longlong minimum, &longlong maximum)
+{
+    var longlong half=1;
+    for(var int i=0;i<62;i++)
+    {
+        half=half*2;
+    }
+    var longlong rest=half - 1;
+    maximum=half+rest;
+    minimum=0 - half;
+    minimum=minimum - half;
+}
+
+/**
+ * @brief Make a unique entry whose key and value exceed the signed int range.
+ * Even indices produce positive entries; odd indices produce negative entries.
+ */
+void LonglongHashtableTest::makeEntry(int index, &longlong key, &longlong value)
+{
+    var longlong base=2147483647;
+    base=base*2;
+    base=base+2;
+    var longlong offset=cast(longlong,index);
+    key=base+offset;
+    value=base*3;
+    var longlong delta=offset*7;
+    value=value+delta;
+    var int remainder=index % 2;
+    if(remainder==1)
+    {
+        key=0 - key;
+        value=0 - value;
+    }
+}
+
+/** @brief Check missing entries, primitive copies, replacement, zero, and clear. */
+void LonglongHashtableTest::testBasic(&int failures)
+{
+    var LonglongLonglongHashtable table;
+    var longlong key=7;
+    var longlong value=0;
+    var longlong outputValue=666;
+    var longlong expected=666;
+
+    this.checkInt(table.size(),0,100,failures);
+    this.checkInt(table.capacity(),16,101,failures);
+    this.checkInt(table.contains(key),0,102,failures);
+    this.checkInt(table.get(key,outputValue),0,103,failures);
+    this.checkLonglong(outputValue,expected,104,failures);
+    this.checkInt(table.remove(key),0,105,failures);
+
+    key=0;
+    value=0;
+    this.checkInt(table.put(key,value),1,106,failures);
+    this.checkInt(table.contains(key),1,107,failures);
+    this.checkInt(table.get(key,outputValue),1,108,failures);
+    expected=0;
+    this.checkLonglong(outputValue,expected,109,failures);
+
+    key=-7;
+    value=-77;
+    this.checkInt(table.put(key,value),1,110,failures);
+    this.checkInt(table.get(key,outputValue),1,111,failures);
+    this.checkLonglong(outputValue,value,112,failures);
+
+    key=42;
+    value=123;
+    this.checkInt(table.put(key,value),1,113,failures);
+    key=43;
+    value=999;
+    var longlong lookupKey=42;
+    this.checkInt(table.get(lookupKey,outputValue),1,114,failures);
+    expected=123;
+    this.checkLonglong(outputValue,expected,115,failures);
+    this.checkInt(table.contains(key),0,116,failures);
+    this.checkInt(table.size(),3,117,failures);
+
+    value=-123;
+    this.checkInt(table.put(lookupKey,value),2,118,failures);
+    this.checkInt(table.size(),3,119,failures);
+    outputValue=999;
+    this.checkInt(table.get(lookupKey,outputValue),1,120,failures);
+    this.checkLonglong(outputValue,value,121,failures);
+    outputValue=321;
+    this.checkInt(table.get(lookupKey,outputValue),1,122,failures);
+    this.checkLonglong(outputValue,value,123,failures);
+
+    table.clear();
+    table.clear();
+    this.checkInt(table.size(),0,124,failures);
+    this.checkInt(table.contains(lookupKey),0,125,failures);
+    outputValue=12345;
+    expected=12345;
+    this.checkInt(table.get(lookupKey,outputValue),0,126,failures);
+    this.checkLonglong(outputValue,expected,127,failures);
+    key=-42;
+    value=314;
+    this.checkInt(table.put(key,value),1,128,failures);
+    this.checkInt(table.get(key,outputValue),1,129,failures);
+    this.checkLonglong(outputValue,value,130,failures);
+    this.checkInt(table.size(),1,131,failures);
+}
+
+/**
+ * @brief Check signed extrema and keys differing only above their lower 32 bits.
+ * Cases 200-299 cover insertion, full-width retrieval, replacement, and removal.
+ */
+void LonglongHashtableTest::testBoundaries(&int failures)
+{
+    var LonglongLonglongHashtable table;
+    var longlong minimum=0;
+    var longlong maximum=0;
+    this.getLimits(minimum,maximum);
+    var longlong aboveInt=2147483647;
+    aboveInt=aboveInt+1;
+    var longlong aboveUint=aboveInt*2;
+    var longlong keys[8];
+    var longlong values[8];
+    keys[0]=0;
+    keys[1]=-1;
+    keys[2]=minimum;
+    keys[3]=maximum;
+    keys[4]=aboveInt;
+    keys[5]=aboveUint;
+    keys[6]=1;
+    keys[7]=aboveUint+1;
+    values[0]=minimum;
+    values[1]=maximum;
+    values[2]=maximum;
+    values[3]=minimum;
+    values[4]=aboveUint;
+    values[5]=0 - aboveUint;
+    values[6]=aboveUint+3;
+    values[7]=minimum+1;
+
+    for(var int i=0;i<8;i++)
+    {
+        var int caseId=200+i;
+        this.checkInt(table.put(keys[i],values[i]),1,caseId,failures);
+    }
+    this.checkInt(table.size(),8,208,failures);
+    var longlong outputValue=0;
+    for(var int j=0;j<8;j++)
+    {
+        var int containsId=210+j;
+        var int getId=220+j;
+        var int valueId=230+j;
+        this.checkInt(table.contains(keys[j]),1,containsId,failures);
+        this.checkInt(table.get(keys[j],outputValue),1,getId,failures);
+        this.checkLonglong(outputValue,values[j],valueId,failures);
+    }
+
+    var longlong replacement=maximum - 1;
+    this.checkInt(table.put(minimum,replacement),2,240,failures);
+    this.checkInt(table.get(minimum,outputValue),1,241,failures);
+    this.checkLonglong(outputValue,replacement,242,failures);
+    this.checkInt(table.size(),8,243,failures);
+    this.checkInt(table.remove(maximum),1,244,failures);
+    this.checkInt(table.remove(maximum),0,245,failures);
+    outputValue=minimum;
+    this.checkInt(table.get(maximum,outputValue),0,246,failures);
+    this.checkLonglong(outputValue,minimum,247,failures);
+    this.checkInt(table.get(minimum,outputValue),1,248,failures);
+    this.checkLonglong(outputValue,replacement,249,failures);
+    this.checkInt(table.size(),7,250,failures);
+}
+
+/**
+ * @brief Exercise equal hashes, tombstones, and wraparound from slot 15 to 0.
+ * Positive multiples of the hash modulus hash to zero; the negative chain
+ * hashes to -1 and therefore starts at slot 15 in a fresh 16-slot table.
+ */
+void LonglongHashtableTest::testCollisions(&int failures)
+{
+    var LonglongLonglongHashtable table;
+    var longlong modulus=2147483647;
+    var longlong keys[5];
+    keys[0]=0;
+    for(var int i=1;i<5;i++)
+    {
+        var int previous=i - 1;
+        keys[i]=keys[previous]+modulus;
+    }
+    var longlong value=0;
+    var longlong outputValue=0;
+    for(var int j=0;j<4;j++)
+    {
+        var longlong number=cast(longlong,j);
+        value=number+1;
+        value=value*100;
+        var int caseId=300+j;
+        this.checkInt(table.put(keys[j],value),1,caseId,failures);
+    }
+    this.checkInt(table.size(),4,304,failures);
+    this.checkInt(table.remove(keys[0]),1,305,failures);
+    this.checkInt(table.get(keys[3],outputValue),1,306,failures);
+    value=400;
+    this.checkLonglong(outputValue,value,307,failures);
+    this.checkInt(table.remove(keys[2]),1,308,failures);
+    this.checkInt(table.get(keys[1],outputValue),1,309,failures);
+    value=200;
+    this.checkLonglong(outputValue,value,310,failures);
+    value=401;
+    this.checkInt(table.put(keys[3],value),2,311,failures);
+    this.checkInt(table.size(),2,312,failures);
+    this.checkInt(table.get(keys[3],outputValue),1,313,failures);
+    this.checkLonglong(outputValue,value,314,failures);
+    value=101;
+    this.checkInt(table.put(keys[0],value),1,315,failures);
+    value=500;
+    this.checkInt(table.put(keys[4],value),1,316,failures);
+    this.checkInt(table.size(),4,317,failures);
+    this.checkInt(table.remove(keys[2]),0,318,failures);
+    outputValue=678;
+    value=678;
+    this.checkInt(table.get(keys[2],outputValue),0,319,failures);
+    this.checkLonglong(outputValue,value,320,failures);
+    value=300;
+    this.checkInt(table.put(keys[2],value),1,321,failures);
+    this.checkInt(table.size(),5,322,failures);
+    this.checkInt(table.get(keys[2],outputValue),1,323,failures);
+    this.checkLonglong(outputValue,value,324,failures);
+    this.checkInt(table.get(keys[3],outputValue),1,325,failures);
+    value=401;
+    this.checkLonglong(outputValue,value,326,failures);
+
+    var LonglongLonglongHashtable wrapped;
+    var longlong negativeKeys[5];
+    negativeKeys[0]=-1;
+    for(var int k=1;k<5;k++)
+    {
+        var int previous=k - 1;
+        negativeKeys[k]=negativeKeys[previous] - modulus;
+    }
+    for(var int m=0;m<4;m++)
+    {
+        var longlong number=cast(longlong,m);
+        value=1000+number;
+        var int putId=330+m;
+        this.checkInt(wrapped.put(negativeKeys[m],value),1,putId,failures);
+    }
+    for(var int n=0;n<4;n++)
+    {
+        var longlong number=cast(longlong,n);
+        value=1000+number;
+        var int getId=340+n;
+        var int valueId=350+n;
+        this.checkInt(wrapped.get(negativeKeys[n],outputValue),1,getId,failures);
+        this.checkLonglong(outputValue,value,valueId,failures);
+    }
+    this.checkInt(wrapped.remove(negativeKeys[0]),1,360,failures);
+    this.checkInt(wrapped.remove(negativeKeys[2]),1,361,failures);
+    value=2003;
+    this.checkInt(wrapped.put(negativeKeys[3],value),2,362,failures);
+    this.checkInt(wrapped.size(),2,363,failures);
+    this.checkInt(wrapped.get(negativeKeys[3],outputValue),1,364,failures);
+    this.checkLonglong(outputValue,value,365,failures);
+    value=2004;
+    this.checkInt(wrapped.put(negativeKeys[4],value),1,366,failures);
+    this.checkInt(wrapped.get(negativeKeys[4],outputValue),1,367,failures);
+    this.checkLonglong(outputValue,value,368,failures);
+    this.checkInt(wrapped.size(),3,369,failures);
+    this.checkInt(wrapped.get(negativeKeys[1],outputValue),1,370,failures);
+    value=1001;
+    this.checkLonglong(outputValue,value,371,failures);
+    this.checkInt(wrapped.remove(negativeKeys[0]),0,372,failures);
+    this.checkInt(wrapped.contains(negativeKeys[2]),0,373,failures);
+}
+
+/**
+ * @brief Check repeated growth, full-width persistence, removal, and reinsertion.
+ * Case ranges 1000-2399 use their low two digits as the entry index.
+ */
+void LonglongHashtableTest::testGrowth(&int failures)
+{
+    var LonglongLonglongHashtable table;
+    var longlong key=0;
+    var longlong value=0;
+    var longlong outputValue=0;
+    for(var int i=0;i<96;i++)
+    {
+        this.makeEntry(i,key,value);
+        var int caseId=1000+i;
+        this.checkInt(table.put(key,value),1,caseId,failures);
+    }
+    this.checkInt(table.size(),96,400,failures);
+    var int grownEnough=0;
+    if(table.capacity()>=128)
+    {
+        grownEnough=1;
+    }
+    this.checkInt(grownEnough,1,401,failures);
+    for(var int j=0;j<96;j++)
+    {
+        this.makeEntry(j,key,value);
+        var int containsId=1100+j;
+        var int getId=1200+j;
+        var int valueId=1300+j;
+        this.checkInt(table.contains(key),1,containsId,failures);
+        this.checkInt(table.get(key,outputValue),1,getId,failures);
+        this.checkLonglong(outputValue,value,valueId,failures);
+    }
+
+    for(var int k=0;k<96;k=k+2)
+    {
+        this.makeEntry(k,key,value);
+        var int removeId=1400+k;
+        var int repeatId=1500+k;
+        this.checkInt(table.remove(key),1,removeId,failures);
+        this.checkInt(table.remove(key),0,repeatId,failures);
+    }
+    this.checkInt(table.size(),48,402,failures);
+    for(var int m=0;m<96;m++)
+    {
+        this.makeEntry(m,key,value);
+        var int remainder=m % 2;
+        var int containsId=1600+m;
+        var int getId=1700+m;
+        var int valueId=1800+m;
+        if(remainder==0)
+        {
+            outputValue=77;
+            var longlong sentinel=77;
+            this.checkInt(table.contains(key),0,containsId,failures);
+            this.checkInt(table.get(key,outputValue),0,getId,failures);
+            this.checkLonglong(outputValue,sentinel,valueId,failures);
+        }
+        else
+        {
+            this.checkInt(table.contains(key),1,containsId,failures);
+            this.checkInt(table.get(key,outputValue),1,getId,failures);
+            this.checkLonglong(outputValue,value,valueId,failures);
+        }
+    }
+
+    for(var int n=0;n<96;n=n+2)
+    {
+        this.makeEntry(n,key,value);
+        value=0 - value;
+        value=value - 100;
+        var int caseId=1900+n;
+        this.checkInt(table.put(key,value),1,caseId,failures);
+    }
+    this.checkInt(table.size(),96,403,failures);
+    for(var int p=0;p<96;p++)
+    {
+        this.makeEntry(p,key,value);
+        var int remainder=p % 2;
+        if(remainder==0)
+        {
+            value=0 - value;
+            value=value - 100;
+        }
+        var int getId=2000+p;
+        var int valueId=2100+p;
+        this.checkInt(table.get(key,outputValue),1,getId,failures);
+        this.checkLonglong(outputValue,value,valueId,failures);
+    }
+
+    var int oldCapacity=table.capacity();
+    table.clear();
+    table.clear();
+    this.checkInt(table.size(),0,404,failures);
+    this.checkInt(table.capacity(),oldCapacity,405,failures);
+    for(var int q=0;q<96;q++)
+    {
+        this.makeEntry(q,key,value);
+        var int caseId=2200+q;
+        this.checkInt(table.contains(key),0,caseId,failures);
+    }
+    outputValue=999;
+    var longlong expected=999;
+    this.checkInt(table.get(key,outputValue),0,406,failures);
+    this.checkLonglong(outputValue,expected,407,failures);
+    var longlong minimum=0;
+    var longlong maximum=0;
+    this.getLimits(minimum,maximum);
+    this.checkInt(table.put(minimum,maximum),1,408,failures);
+    this.checkInt(table.get(minimum,outputValue),1,409,failures);
+    this.checkLonglong(outputValue,maximum,410,failures);
+    this.checkInt(table.size(),1,411,failures);
+}
+
+/** @brief Run all longlong/longlong checks; report 1 for success and 0 for failure. */
+void LonglongHashtableTest::run(&int result)
+{
+    result=0;
+    var int failures=0;
+    this.testBasic(failures);
+    this.testBoundaries(failures);
+    this.testCollisions(failures);
+    this.testGrowth(failures);
+    var PrintfClass output;
+    if(failures==0)
+    {
+        result=1;
+        output.fstr("LonglongHashtableTest: PASS").pr();
+    }
+    else
+    {
+        output.fstr("LonglongHashtableTest: FAIL ($ assertions)").sa(failures).pr();
+    }
+}

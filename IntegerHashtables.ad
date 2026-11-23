@@ -1,0 +1,103 @@
+
+
+
+
+class IntIntHashtable
+{
+    *int _keys[];
+    *int _values[];
+    *int _states[];   // 0 empty, 1 occupied, 2 tombstone
+    int _capacity;
+    int _size;
+    int _used;       // occupied + tombstones
+    IntKeyAdapter _keyAdapter;
+    IntValueAdapter _valueAdapter;
+methods:
+    IntIntHashtable();
+    ~IntIntHashtable();
+    int put(&int key, &int value);  // 1 inserted, 2 updated, 0 failure
+    int get(&int key, &int value);  // copies the value; 1 found, 0 absent
+    int contains(&int key);       // 1 found, 0 absent
+    int remove(&int key);         // 1 removed, 0 absent
+    void clear();
+    int size();
+    int capacity();
+    int findSlot(&int key, &int found);
+    int grow(int newCapacity);
+};
+
+
+class IntLonglongHashtable
+{
+    *int _keys[];
+    *longlong _values[];
+    *int _states[];   // 0 empty, 1 occupied, 2 tombstone
+    int _capacity;
+    int _size;
+    int _used;       // occupied + tombstones
+    IntKeyAdapter _keyAdapter;
+    LonglongValueAdapter _valueAdapter;
+methods:
+    IntLonglongHashtable();
+    ~IntLonglongHashtable();
+    int put(&int key, &longlong value);  // 1 inserted, 2 updated, 0 failure
+    int get(&int key, &longlong value);  // copies the value; 1 found, 0 absent
+    int contains(&int key);       // 1 found, 0 absent
+    int remove(&int key);         // 1 removed, 0 absent
+    void clear();
+    int size();
+    int capacity();
+    int findSlot(&int key, &int found);
+    int grow(int newCapacity);
+};
+
+
+class LonglongIntHashtable
+{
+    *longlong _keys[];
+    *int _values[];
+    *int _states[];   // 0 empty, 1 occupied, 2 tombstone
+    int _capacity;
+    int _size;
+    int _used;       // occupied + tombstones
+    LonglongKeyAdapter _keyAdapter;
+    IntValueAdapter _valueAdapter;
+methods:
+    LonglongIntHashtable();
+    ~LonglongIntHashtable();
+    int put(&longlong key, &int value);  // 1 inserted, 2 updated, 0 failure
+    int get(&longlong key, &int value);  // copies the value; 1 found, 0 absent
+    int contains(&longlong key);       // 1 found, 0 absent
+    int remove(&longlong key);         // 1 removed, 0 absent
+    void clear();
+    int size();
+    int capacity();
+    int findSlot(&longlong key, &int found);
+    int grow(int newCapacity);
+};
+
+
+class LonglongLonglongHashtable
+{
+    *longlong _keys[];
+    *longlong _values[];
+    *int _states[];   // 0 empty, 1 occupied, 2 tombstone
+    int _capacity;
+    int _size;
+    int _used;       // occupied + tombstones
+    LonglongKeyAdapter _keyAdapter;
+    LonglongValueAdapter _valueAdapter;
+methods:
+    LonglongLonglongHashtable();
+    ~LonglongLonglongHashtable();
+    int put(&longlong key, &longlong value);  // 1 inserted, 2 updated, 0 failure
+    int get(&longlong key, &longlong value);  // copies the value; 1 found, 0 absent
+    int contains(&longlong key);       // 1 found, 0 absent
+    int remove(&longlong key);         // 1 removed, 0 absent
+    void clear();
+    int size();
+    int capacity();
+    int findSlot(&longlong key, &int found);
+    int grow(int newCapacity);
+};
+

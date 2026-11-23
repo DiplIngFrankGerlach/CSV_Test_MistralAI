@@ -1,0 +1,15 @@
+/** Tests for longlong keys and longlong values stored by value. */
+class LonglongHashtableTest
+{
+methods:
+    // result = 1 when every assertion passed; 0 otherwise.
+    void run(&int result);
+    void checkInt(int actual, int expected, int caseId, &int failures);
+    void checkLonglong(longlong actual, longlong expected, int caseId, &int failures);
+    void getLimits(&longlong minimum, &longlong maximum);
+    void makeEntry(int index, &longlong key, &longlong value);
+    void testBasic(&int failures);
+    void testBoundaries(&int failures);
+    void testCollisions(&int failures);
+    void testGrowth(&int failures);
+};

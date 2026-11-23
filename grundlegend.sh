@@ -24,7 +24,7 @@ compile()
 ########################################################
 compileBG()
 {
-    ${SPR_VERZ}/SPRcomp $1 -outputPath output -operatingSystem Linux -sappeurDirectory ${SPR_VERZ} &
+    ${SPR_VERZ}/compiler/SPRcomp $1 -outputPath output -operatingSystem Linux -sappeurDirectory ${SPR_VERZ} &
 }
 
 ######################################################

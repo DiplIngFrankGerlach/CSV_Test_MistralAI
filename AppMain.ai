@@ -2,10 +2,21 @@ Import
 {
   "Strings.ad",
   "System.ad",
+  "SimpleString.ad",
+  "SimpleStringTest.ad",
+  "StringHashtableAdapters.ad",
+  "Base64.ad", 
+  "Base64Test.ad",
+  "MyHashtable.ad",
+  "StringHashtableTest.ad",
   "Math.ad",
   "CSVLeser_MISTRAL.ad",
-  
   "ExpressionValuator_MISTRAL.ad",
+  "IntegerHashtableAdapters.ad",
+  "IntegerHashtables.ad",
+  "IntIntHashtableTest.ad",
+  "LonglongHashtableTest.ad",
+  "IntegerHashtableTests.ad",
   "AppMain.ad"
 }
 
@@ -25,32 +36,75 @@ int Main::main()
    // Gib das Ergebnis aus
    pfc.fstr("Durchschnittswert der 2. Spalte: $").sa(average).pr();
    */
-
+    var int x;
+    var int y = x * -1;
 
     var PrintfClass pfc;
+    var int ut_result;
+    SimpleStringTest::run(ut_result);
+    if(ut_result == 1) { pfc.fstr("SimpleStringTest::run() ERFOLG !").pr(); }
+    else { pfc.fstr("SimpleStringTest::run() Fehler Nr $ !").sa(ut_result).pr(); }
+
+    var StringHashtableTest sthtt;
+    sthtt.run(ut_result);
+    if(ut_result == 1) { pfc.fstr("StringHashtableTest::run() ERFOLG !").pr(); }
+    else { pfc.fstr("StringHashtableTest::run() Fehler Nr $ !").sa(ut_result).pr(); }
+
+    var Base64Test b64test;
+    b64test.run(ut_result);
+    if(ut_result == 1) { pfc.fstr("Base64Test::run() ERFOLG !").pr(); }
+    else { pfc.fstr("Base64Test::run() Fehler Nr $ !").sa(ut_result).pr(); }
+
+
+    var IntegerHashtableTests ihttest;
+    ihttest.run(ut_result);
+    if(ut_result == 1) { pfc.fstr("IntegerHashtableTests::run() ERFOLG !").pr(); }
+    else { pfc.fstr("IntegerHashtableTests::run() Fehler Nr $ !").sa(ut_result).pr(); }
+
+
+
     var ExpressionEvaluator evaluator;
     var Math math;
 
     // Testausdrücke
-    var String_16 expressions[8];
+    var String_16 expressions[10];
     expressions[0].assign("3 + 4 * 2");
     expressions[1].assign("(3 + 4) * 2");
-    expressions[2].assign("sin(0.5) + cos(0.5)");
-    expressions[3].assign("sqrt(16) + pow(2, 3)");
-    expressions[4].assign("abs(-5.5) * 2");
-    expressions[5].assign("log(10) + 1");
-    expressions[6].assign("2 * (3 + (4 * 5))");
-    expressions[7].assign("-10 + 20 / 2");
+    expressions[2].assign("sinus(0.5)+cosinus(0.5)");
+    expressions[3].assign("sqrt(16.0)+pow(2.0,3.0)");
+    expressions[4].assign("abs(-5.5)*2.0");
+    expressions[5].assign("log(10)+1");
+    expressions[6].assign("2*(3+(4*5))");
+    expressions[7].assign("-10+20/2");
+    expressions[8].assign("10.123");
+    expressions[9].assign("sqrt(10.123)");
 
-    pfc.fstr("=== Sappeur Mathematik-Auswerter ===\\n").pr();
+    pfc.fstr("=== Sappeur Mathematik-Auswerter ===").pr();
 
-    for(var int i = 0; i < 8; i++)
+    var String_16 stest("sqrt(10.123)");
+    evaluator.setExpression(stest);
+    var double result0 = evaluator.evaluate();
+    pfc.fstr("Ausdruck: $ = $").sa(stest).sa(result0).pr();
+
+    stest.assign("sinus(cosinus(3.77))");
+    evaluator.setExpression(stest);
+    result0 = evaluator.evaluate();
+    pfc.fstr("Ausdruck: $ = $").sa(stest).sa(result0).pr();
+
+    stest.assign("sinus(cosinus(3.77) * -1.2345)");
+    evaluator.setExpression(stest);
+    result0 = evaluator.evaluate();
+    pfc.fstr("Ausdruck: $ = $").sa(stest).sa(result0).pr();
+
+
+    for(var int i = 0; i < expressions.sz; i++)
     {
         evaluator.setExpression(expressions[i]);
         var double result = evaluator.evaluate();
-
-        pfc.fstr("Ausdruck: $ = $\\n").sa(expressions[i]).sa(result).pr();
+        pfc.fstr("Ausdruck: $ = $").sa(expressions[i]).sa(result).pr();
     }
+
+    var *PrintfClass pfcs[] = new PrintfClass[100];
 
    return 1;
 }

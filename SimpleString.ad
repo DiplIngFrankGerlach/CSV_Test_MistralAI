@@ -1,0 +1,57 @@
+// SimpleString.ad - mutable, byte-oriented string for Sappeur.
+// Character indexes are zero-based byte indexes (ASCII-oriented).
+class SimpleString
+{
+    *char _data[];
+    int _length;
+    int _capacity;
+methods:
+    SimpleString();
+    SimpleString(&char text[]);
+
+    int length();
+    int isEmpty();
+    int capacity();
+    void clear();
+    void reserve(int minimumCapacity);
+
+    void assign(&char text[]);
+    void assign(&SimpleString other);
+    void append(&char text[]);
+    void append(&SimpleString other);
+    void appendChar(char value);
+
+    char charAt(int index);
+    int setCharAt(int index, char value);
+
+    int equals(&SimpleString other);
+    int equals(&char text[]);
+    int compareTo(&SimpleString other);
+    int compareTo(&char text[]);
+    int startsWith(&SimpleString prefix);
+    int startsWith(&char prefix[]);
+    int endsWith(&SimpleString suffix);
+    int endsWith(&char suffix[]);
+    int indexOf(&SimpleString needle);
+    int indexOf(&char needle[]);
+    int indexOfFrom(&SimpleString needle, int fromIndex);
+    int indexOfFrom(&char needle[], int fromIndex);
+    int lastIndexOf(&SimpleString needle);
+    int lastIndexOf(&char needle[]);
+    int contains(&SimpleString needle);
+    int contains(&char needle[]);
+
+    // Return 1 on success; return 0 on an invalid range.
+    // The end index is exclusive, as in Java.
+    int substring(int beginIndex, int endIndex, &SimpleString result);
+    void replace(char oldChar, char newChar, &SimpleString result);
+    void toLowerCase(&SimpleString result);
+    void toUpperCase(&SimpleString result);
+    void trim(&SimpleString result);
+
+    // Internal ASCII whitespace classifier (space, TAB, LF, CR).
+    int isTrimSpace(char value);
+
+    // Copy with a trailing NUL; return 1 if destination is big enough.
+    int toCharArray(&char destination[]);
+};
