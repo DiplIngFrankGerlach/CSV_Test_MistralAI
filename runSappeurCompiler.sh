@@ -58,6 +58,10 @@ compile CSVLeser_MISTRAL.ai
 compile ExpressionValuator_MISTRAL.ai
 
 compile Math.ai
+
+compile HTTPScanner.ai
+
+compile ScannerUnitTest.ai
 ###################################################################################################################
 # erzeuge die Stack Memory Bestimmung
 #####################################
