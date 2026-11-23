@@ -1,0 +1,37 @@
+/**
+ * @file IntegerHashtableAdapters.ad
+ * Primitive adapters for OAHT_DECL / OAHT_IMPL from the Rules5 package.
+ * All methods are instance methods. Keys and values remain stored by value.
+ */
+
+class IntKeyAdapter
+{
+methods:
+    int hash(&int key);
+    int equals(&int a, &int b);
+    void copy(&int dst, &int src);
+    void destroy(&int target);
+};
+
+class IntValueAdapter
+{
+methods:
+    void copy(&int dst, &int src);
+    void destroy(&int target);
+};
+
+class LonglongKeyAdapter
+{
+methods:
+    int hash(&longlong key);
+    int equals(&longlong a, &longlong b);
+    void copy(&longlong dst, &longlong src);
+    void destroy(&longlong target);
+};
+
+class LonglongValueAdapter
+{
+methods:
+    void copy(&longlong dst, &longlong src);
+    void destroy(&longlong target);
+};

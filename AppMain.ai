@@ -11,8 +11,12 @@ Import
   "StringHashtableTest.ad",
   "Math.ad",
   "CSVLeser_MISTRAL.ad",
-  
   "ExpressionValuator_MISTRAL.ad",
+  "IntegerHashtableAdapters.ad",
+  "IntegerHashtables.ad",
+  "IntIntHashtableTest.ad",
+  "LonglongHashtableTest.ad",
+  "IntegerHashtableTests.ad",
   "AppMain.ad"
 }
 
@@ -50,6 +54,13 @@ int Main::main()
     b64test.run(ut_result);
     if(ut_result == 1) { pfc.fstr("Base64Test::run() ERFOLG !").pr(); }
     else { pfc.fstr("Base64Test::run() Fehler Nr $ !").sa(ut_result).pr(); }
+
+
+    var IntegerHashtableTests ihttest;
+    ihttest.run(ut_result);
+    if(ut_result == 1) { pfc.fstr("IntegerHashtableTests::run() ERFOLG !").pr(); }
+    else { pfc.fstr("IntegerHashtableTests::run() Fehler Nr $ !").sa(ut_result).pr(); }
+
 
 
     var ExpressionEvaluator evaluator;

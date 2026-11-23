@@ -1,0 +1,7 @@
+/** @file IntegerHashtableTests.ad Combined runner for both integer suites. */
+class IntegerHashtableTests
+{
+methods:
+    // result is 1 if both suites pass, otherwise 0.
+    void run(&int result);
+};

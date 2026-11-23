@@ -1,0 +1,13 @@
+/** @file Tests for the int-key, int-value open-addressing hash table. */
+class IntIntHashtableTest
+{
+methods:
+    void run(&int result);
+    void checkEqual(int actual, int expected, int caseId, &int failures);
+    void checkEntry(&IntIntHashtable table, int key, int expected,
+                   int caseId, &int failures);
+    void testBasics(&int failures);
+    void testLimits(&int failures);
+    void testCollisions(&int failures);
+    void testGrowth(&int failures);
+};
