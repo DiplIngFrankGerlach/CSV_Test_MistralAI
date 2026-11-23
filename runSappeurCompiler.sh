@@ -72,6 +72,14 @@ compile StringHashtableTest.ai
 compile Base64.ai  
 
 compile Base64Test.ai
+
+compile IntegerHashtableImpls.ai
+
+compile IntIntHashtableTest.ai
+compile IntegerHashtableAdapters.ai
+compile IntegerHashtableImpls.ai
+compile IntegerHashtableTests.ai
+compile LonglongHashtableTest.ai
 ###################################################################################################################
 # erzeuge die Stack Memory Bestimmung
 #####################################
