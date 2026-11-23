@@ -2,7 +2,7 @@
 
 CC = gcc
 HOMEDIR=/home/frank
-SPRDIR=${HOMEDIR}/Sappeur_4.18
+SPRDIR=${HOMEDIR}/Sappeur4.17
 VPATH=${SPRDIR}/cppMapping:../
 
 INCLUDE= -I${SPRDIR}/cppMapping -I. -I..  -I/usr/include

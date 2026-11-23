@@ -125,45 +125,6 @@ void HTTPScanner::skipWhitespace()
 
 
 
-void HTTPScanner::skipWhitespace()
-{
-    var int fertig = 0;
-
-    while(fertig == 0)
-    {
-        switch(_currentChar)
-        {
-            case ' ':
-            {
-                this.nextChar();
-            };
-            break;
-
-            case '\t':
-            {
-                this.nextChar();
-            };
-            break;
-
-            case '\r':
-            {
-                this.nextChar();
-            };
-            break;
-
-            case '\n':
-            {
-                this.nextChar();
-            };
-            break;
-
-            default:
-            {
-                fertig = 1;
-            };
-        }
-    }
-}
 
 
 TokenType HTTPScanner::scanOperator()

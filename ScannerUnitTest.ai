@@ -232,33 +232,6 @@ this.test(
     return _testsFailed;
 }
 
-int ScannerUnitTest::test(
-        &char testName[],
-        &char input[],
-        &char expected[])
-{
-    var PrintfClass pfc;
-
-    _testsRun = _testsRun + 1;
-
-    pfc.fstr("Running $").sa(testName).pr();
-
-    //
-    // Teil 2:
-    //
-    // 1. Datei erzeugen
-    // 2. input hineinschreiben
-    // 3. HTTPScanner starten
-    // 4. Ausgabe erzeugen
-    // 5. expected vergleichen
-    //
-
-    _testsPassed = _testsPassed + 1;
-
-    pfc.fstr("PASS $").sa(testName).pr();
-
-    return 1;
-}
 
 
 void ScannerUnitTest::printSummary()

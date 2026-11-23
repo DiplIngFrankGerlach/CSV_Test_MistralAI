@@ -8,6 +8,7 @@ OBJECTS=\
 main.o \
 ProjektCPP.o \
 mapping.o \
+HTTPScanner.o \
 AppMain.o \
 Base64.o \
 Base64Test.o \
@@ -18,6 +19,7 @@ determStackMemory_Base64.ai.o \
 determStackMemory_Base64Test.ai.o \
 determStackMemory_CSVLeser_MISTRAL.ai.o \
 determStackMemory_ExpressionValuator_MISTRAL.ai.o \
+determStackMemory_HTTPScanner.ai.o \
 determStackMemory_IntegerHashtableAdapters.ai.o \
 determStackMemory_IntegerHashtableImpls.ai.o \
 determStackMemory_IntegerHashtableTests.ai.o \
@@ -25,6 +27,7 @@ determStackMemory_IntIntHashtableTest.ai.o \
 determStackMemory_LonglongHashtableTest.ai.o \
 determStackMemory_Math.ai.o \
 determStackMemory_MyHashtable.ai.o \
+determStackMemory_ScannerUnitTest.ai.o \
 determStackMemory_SimpleString.ai.o \
 determStackMemory_SimpleStringTest.ai.o \
 determStackMemory_StringHashtableAdapters.ai.o \
@@ -53,10 +56,11 @@ placementNewClass_Compare_String_16.o \
 placementNewClass_Complex.o \
 placementNewClass_CSVLeser.o \
 placementNewClass_ExpressionEvaluator.o \
-placementNewClass_Hashable4.o \
 placementNewClass_Hash_String_128.o \
 placementNewClass_Hash_String_16.o \
+placementNewClass_Hashable4.o \
 placementNewClass_HexPrinter.o \
+placementNewClass_HTTPScanner.o \
 placementNewClass_Input.o \
 placementNewClass_IntegerHashtableTests.o \
 placementNewClass_IntIntHashtable.o \
@@ -79,6 +83,7 @@ placementNewClass_MutexInfo.o \
 placementNewClass_MyHashtable.o \
 placementNewClass_NullPtrClassSappeurInternal.o \
 placementNewClass_PrintfClass.o \
+placementNewClass_ScannerUnitTest.o \
 placementNewClass_Semaphore.o \
 placementNewClass_SemaphoreInfo.o \
 placementNewClass_SimpleString.o \
@@ -98,6 +103,7 @@ placementNewClass_ThreadLocalStorageEntry.o \
 placementNewClass_ThreadLocalStorageList.o \
 placementNewClass_Umgebung.o \
 placementNewClass_ZKNuetzlich.o \
+ScannerUnitTest.o \
 SimpleString.o \
 SimpleStringTest.o \
 StringHashtableAdapters.o \
@@ -107,9 +113,9 @@ System.o \
 ZKNuetzlich.o \
 
 
-CC = gcc
-HOMEDIR=/home/frank
-SPRDIR=${HOMEDIR}/Sappeur_4.18
+CC = g++
+HOMEDIR=/Users/fg
+SPRDIR=${HOMEDIR}/Sappeur4.18
 VPATH=${SPRDIR}/cppMapping:../
 
 INCLUDE= -I${SPRDIR}/cppMapping -I. -I..  -I/usr/include
